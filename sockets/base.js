@@ -9,7 +9,7 @@ module.exports = function (io) {
         socket.on('send:balanceSms', function (data) {
             // var id_usuario = req.param('idUsuario');
 
-            var url = "http://world.conektta.com.br:81/api/credits/" + data.id + "/sms";
+            var url = "http://world.conektta.info/api/credits/" + data.id + "/sms";
             request({
                 uri: url,
                 method: "GET"
