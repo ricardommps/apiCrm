@@ -104,6 +104,7 @@ module.exports = function (io) {
                     callback(returnJson);
                     //return returnJson;
                 }
+                console.log(response.body);
                 if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
                     response.body == '"parametro invalido"') {
                     socket.emit('send:errorBalanceEmail', response.body);

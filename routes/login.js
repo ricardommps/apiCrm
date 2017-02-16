@@ -6,7 +6,7 @@ var router = express.Router();
 
 
 router.get('/', function(req, res, next) {
-
+    console.log("login");
     var user = {
         username: req.param('username'),
         password: req.param('password')
