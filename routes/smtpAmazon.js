@@ -36,7 +36,7 @@ router.get('/listVerifiedEmailAddresses', function(req, res, next) {
 router.get('/verifyEmailIdentity', function(req, res, next) {
 
     var email = req.query.email;
-    console.log(req);
+    console.log(email);
 
     var params = {
         EmailAddress: email

@@ -1,7 +1,9 @@
 var request = require("request");
 var striptags = require('striptags');
-var SENDGRID_API_KEY = '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';
-var sg = require('sendgrid')(SENDGRID_API_KEY);
+var aws = require("aws-sdk");
+
+aws.config.loadFromPath(__dirname + '/../config-aws-ses.json');
+var ses = new aws.SES();
 module.exports = function (io) {
     'use strict';
     io.on('connection', function (socket) {
@@ -9,53 +11,84 @@ module.exports = function (io) {
         socket.on('send:sendEmail', function (data, callback) {
 
             var operation = data.operation[0];
+            var create = data.create[0];
             var credits = data.credits;
             var email = data.email[0];
-            var jsonReturn = {}
+            console.log(email);
+            var jsonReturn = {};
 
-
-            //console.log(operation.valor);
-           // console.log(credits);
-            if (operation.valor < credits) {
-
-                var url = "http://world.conektta.info/api/credits/add";
-                request = require("request");
+            if (create.Message.cost < credits) {
+                // Salvar campanha
+                console.log(">>>START");
+                var url = "http://world.conektta.info/api/campanhas/add";
                 request({
                     uri: url,
                     method: "POST",
-                    form: operation
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    form: create
                 }, function (error, response, body) {
                     if (error) {
+                        console.log(error);
                         callback(error);
                     }
-                    //console.log(body);
-                    if (body == "Dados inseridos com sucess") {
+                    console.log(">>>>>>>>>>>>>> RETURN SAVE");
+                    console.log(body);
+                    if (body === "Campanha gravada com sucesso") {
+                        // Envia campanha
 
-                        updateCreditsEmail(operation.id_usuario, function (response) {
-                            // Here you have access to your variable
-                            if (response.status) {
-                                sendEmail(email, function (response) {
-                                    // Here you have access to your variable
-                                    callback(response.status);
+
+
+                        ses.sendEmail(email, function (err, data) {
+                            if (err) {
+                                console.log(err);
+                                callback(err);
+                            } else {
+                                console.log(">>>>>>>>>>>>>> RETURN SEND");
+                                console.log(data);
+                                // Debita credito
+                                var url = "http://world.conektta.info/api/credits/add";
+                                request({
+                                    uri: url,
+                                    method: "POST",
+                                    form: operation
+                                }, function (error, response, body) {
+                                    if (error) {
+                                        console.log(error);
+                                        callback(error);
+                                    }
+                                    console.log(">>>>>>>>>>>>>> RETURN CRED");
+                                        console.log(body);
+                                    if (body == "Dados inseridos com sucess") {
+
+                                        // Atualiza credito
+                                        updateCreditsEmail(operation.id_usuario, function (response) {
+                                            console.log(response);
+                                            if (response.status) {
+                                                callback(response.status);
+                                            }
+                                        })
+                                    } else {
+                                        callback("Ero ao enviar email");
+                                    }
+
 
                                 })
-
                             }
-                        })
-
+                        });
 
                     } else {
-                        callback("Ero ao enviar email");
+                        callback({
+                            success: false,
+                            mensage: "Errro ao gravar campanha"
+                        });
                     }
-                    //res.json({ success: true, reponse: body });
-                    //res.json({ success: true});
-
                 })
 
             } else {
-                //console.log("NAo OK");
+                callback();
             }
-
         });
 
         socket.on('send:balanceEmail', function (data) {
@@ -72,11 +105,11 @@ module.exports = function (io) {
                 }
                 if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
                     response.body == '"parametro invalido"') {
-                   // console.log(">>>ERROR")
+                    // console.log(">>>ERROR")
                     socket.emit('send:errorBalanceEmail', response.body);
 
                 } else {
-                   // console.log(response.body);
+                    // console.log(response.body);
                     socket.emit('send:sucessBalanceEmail', response.body);
                 }
                 // socket.emit('send:sucessBalanceEmail',response.body);
@@ -84,7 +117,6 @@ module.exports = function (io) {
                 // res.json(response.body);
             })
         });
-
 
 
         var updateCreditsEmail = function (idUser, callback) {
@@ -141,7 +173,7 @@ module.exports = function (io) {
                 "suppression_group_id": 2321,
                 "custom_unsubscribe_url": "",
                 "html_content": jsonParans.html_content,
-                "plain_content": striptags(jsonParans.html_content)  + " [unsubscribe]"
+                "plain_content": striptags(jsonParans.html_content) + " [unsubscribe]"
             };
 
 
@@ -150,15 +182,15 @@ module.exports = function (io) {
 
             sg.API(request, function (error, responseCampaigns) {
 
-                if(responseCampaigns.statusCode == "201"){
+                if (responseCampaigns.statusCode == "201") {
                     var campaign_id = responseCampaigns.body.id;
-                    request.path = '/v3/campaigns/'+campaign_id+'/schedules/now'
+                    request.path = '/v3/campaigns/' + campaign_id + '/schedules/now'
                     sg.API(request, function (error, responseSchedules) {
                         callback(responseSchedules.body);
                         //res.send(responseSchedules.body);
 
                     });
-                }else{
+                } else {
                     callback(responseSchedules.body);
                     //res.send(responseCampaigns.body);
                 }
