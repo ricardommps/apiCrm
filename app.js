@@ -21,6 +21,8 @@ var campaigns = require('./routes/campaigns');
 var sendCampaigns = require('./routes/sendCampaigns');
 var creditOperation = require('./routes/creditOperation');
 var smtpAmazon = require('./routes/smtpAmazon');
+var sms = require('./routes/sms');
+var email = require('./routes/email');
 var login = require('./routes/login');
 
 var teste = require('./routes/teste');
@@ -69,6 +71,8 @@ app.use('/api/sendCampaigns',sendCampaigns);
 app.use('/api/creditOperation',creditOperation);
 app.use('/api/wordConekttaApi',wordConekttaApi);
 app.use('/api/login',login);
+app.use('/api/sms',sms);
+app.use('/api/email',email);
 app.use('/api/smtpAmazon',smtpAmazon);
 app.use('/api/teste',teste);
 
