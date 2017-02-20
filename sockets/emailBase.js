@@ -55,11 +55,8 @@ module.exports = function (io) {
                                     form: operation
                                 }, function (error, response, body) {
                                     if (error) {
-                                        console.log(error);
                                         callback(error);
                                     }
-                                    console.log(">>>>>>>>>>>>>> RETURN CRED");
-                                        console.log(body);
                                     if (body == "Dados inseridos com sucess") {
 
                                         // Atualiza credito

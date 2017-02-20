@@ -13,14 +13,13 @@ module.exports = function (io) {
             var operation = data.operation[0];
             var create = data.create[0];
             var credits = data.credits;
-            var email = data.email[0];
-            console.log(email);
+            var sms = data.sms[0];
             var jsonReturn = {};
 
             if (create.Message.cost < credits) {
                 // Salvar campanha
 
-                var url = "http://world.conektta.info/sms/add";
+                var url = "http://world.conektta.info/api/sms/add";
                 request({
                     uri: url,
                     method: "POST",
@@ -33,7 +32,7 @@ module.exports = function (io) {
                         console.log(error);
                         callback(error);
                     }
-
+                    console.log(body);
                     if (body === "Campanha gravada com sucesso") {
 
                         // Debita credito
@@ -44,14 +43,15 @@ module.exports = function (io) {
                             form: operation
                         }, function (error, response, body) {
                             if (error) {
-                                console.log(error);
+                               // console.log(error);
                                 callback(error);
                             }
+                            console.log(body);
                             if (body == "Dados inseridos com sucess") {
 
                                 // Atualiza credito
                                 updateCreditsSms(operation.id_usuario, function (response) {
-                                    console.log(response);
+                                   // console.log(response);
                                     if (response.status) {
                                         callback(response.status);
                                     }
@@ -94,7 +94,7 @@ module.exports = function (io) {
                     socket.emit('send:errorBalanceSms', response.body);
 
                 } else {
-                    // console.log(response.body);
+                    console.log(response.body);
                     socket.emit('send:sucessBalanceSms', response.body);
                 }
                 // socket.emit('send:sucessBalanceEmail',response.body);

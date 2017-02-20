@@ -101,6 +101,7 @@ app.use(function(err, req, res, next) {
 
 require('./sockets/base')(io);
 require('./sockets/emailBase')(io);
+require('./sockets/smsBase')(io);
 
 
 
