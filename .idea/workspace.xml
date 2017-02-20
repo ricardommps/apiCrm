@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e218b52a-662d-4884-9292-37a365dcb4b7" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sockets/emailBase.js" afterPath="$PROJECT_DIR$/sockets/emailBase.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sockets/smsBase.js" afterPath="$PROJECT_DIR$/sockets/smsBase.js" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,17 +25,27 @@
         <entry file="file://$PROJECT_DIR$/routes/sms.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="133">
-              <caret line="99" column="55" lean-forward="true" selection-start-line="99" selection-start-column="2" selection-end-line="99" selection-end-column="55" />
+              <caret line="99" column="55" lean-forward="false" selection-start-line="99" selection-start-column="2" selection-end-line="99" selection-end-column="55" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="smsBase.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="smsBase.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sockets/smsBase.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="115">
               <caret line="48" column="46" lean-forward="false" selection-start-line="48" selection-start-column="46" selection-end-line="48" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="showContactList.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/routes/showContactList.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1080">
+              <caret line="54" column="6" lean-forward="false" selection-start-line="27" selection-start-column="4" selection-end-line="54" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -719,12 +726,12 @@
       <workItem from="1487371392622" duration="3434000" />
       <workItem from="1487406077132" duration="10522000" />
       <workItem from="1487440453604" duration="697000" />
-      <workItem from="1487588797913" duration="5069000" />
+      <workItem from="1487588797913" duration="6199000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="272427000" />
+    <option name="totallyTimeSpent" value="273557000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -742,7 +749,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3327787" sideWeight="0.4969697" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3327787" sideWeight="0.4969697" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31136364" sideWeight="0.490099" order="0" side_tool="false" content_ui="combo" />
@@ -1055,13 +1062,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/showContactList.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="54" column="6" lean-forward="true" selection-start-line="27" selection-start-column="4" selection-end-line="54" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/contactsList.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-39">
@@ -1131,7 +1131,7 @@
     <entry file="file://$PROJECT_DIR$/routes/sms.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
-          <caret line="99" column="55" lean-forward="true" selection-start-line="99" selection-start-column="2" selection-end-line="99" selection-end-column="55" />
+          <caret line="99" column="55" lean-forward="false" selection-start-line="99" selection-start-column="2" selection-end-line="99" selection-end-column="55" />
           <folding />
         </state>
       </provider>
@@ -1140,6 +1140,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="115">
           <caret line="48" column="46" lean-forward="false" selection-start-line="48" selection-start-column="46" selection-end-line="48" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/showContactList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1080">
+          <caret line="54" column="6" lean-forward="false" selection-start-line="27" selection-start-column="4" selection-end-line="54" selection-end-column="6" />
           <folding />
         </state>
       </provider>
