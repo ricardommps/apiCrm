@@ -19,11 +19,14 @@ var createCampaigns = require('./routes/createCampaigns');
 var createAndSendEmailMk = require('./routes/createAndSendEmailMk');
 var campaigns = require('./routes/campaigns');
 var sendCampaigns = require('./routes/sendCampaigns');
+
+
 var creditOperation = require('./routes/creditOperation');
 var smtpAmazon = require('./routes/smtpAmazon');
 var sms = require('./routes/sms');
 var email = require('./routes/email');
 var login = require('./routes/login');
+var createTemplateEmail = require('./routes/createTemplateEmail');
 
 var teste = require('./routes/teste');
 
@@ -68,12 +71,14 @@ app.use('/api/createCampaigns',createCampaigns);
 app.use('/api/createAndSendEmailMk',createAndSendEmailMk);
 app.use('/api/campaigns',campaigns);
 app.use('/api/sendCampaigns',sendCampaigns);
+
 app.use('/api/creditOperation',creditOperation);
 app.use('/api/wordConekttaApi',wordConekttaApi);
 app.use('/api/login',login);
 app.use('/api/sms',sms);
 app.use('/api/email',email);
 app.use('/api/smtpAmazon',smtpAmazon);
+app.use('/api/createTemplateEmail',createTemplateEmail);
 app.use('/api/teste',teste);
 
 app.use(allowCrossDomain);

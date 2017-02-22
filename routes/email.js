@@ -7,7 +7,7 @@ var router = express.Router();
 router.get('/lists', function(req, res, next) {
     var idUser = req.query.idUser
     console.log(idUser);
-    var url = "http://world.conektta.info/api/contatos/getListasSms/"+idUser;
+    var url = "http://world.conektta.info/api/contatos/getListas/"+idUser;
     request({
         uri: url,
         method: "GET"
@@ -24,7 +24,8 @@ router.get('/lists', function(req, res, next) {
 });
 
 router.post('/createLists', function(req, res, next) {
-    var url = "http://world.conektta.info/api/contatos/addlistsms";
+    var url = "http://world.conektta.info/api/contatos/addlist";
+
 
     request({
         uri: url,

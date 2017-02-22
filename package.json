@@ -25,6 +25,7 @@
     "requestify": "^0.2.5",
     "sendgrid": "^4.7.1",
     "serve-favicon": "~2.3.0",
+    "smsapicom": "^1.2.0",
     "smtpapi": "1.2.0",
     "socket.io": "^1.3.7",
     "striptags": "^3.0.1",

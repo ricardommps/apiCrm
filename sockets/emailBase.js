@@ -8,6 +8,12 @@ module.exports = function (io) {
     'use strict';
     io.on('connection', function (socket) {
 
+        socket.on('send:templateEmail', function (data, callback) {
+            console.log(data);
+            socket.broadcast.emit('send:templateEmail', data);
+            callback("success!");
+        });
+
         socket.on('send:sendEmail', function (data, callback) {
 
             var operation = data.operation[0];
@@ -146,6 +152,8 @@ module.exports = function (io) {
                 } else {
                     socket.emit('send:sucessBalanceEmail', response.body);
                     socket.broadcast.emit('send:sucessBalanceEmail', response.body);
+
+
                     var returnJson = {
                         status: true,
                         returnObj: response.body

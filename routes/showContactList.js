@@ -36,7 +36,7 @@ router.post('/getContatosLista', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-
+        console.log(response.body);
         var json = JSON.parse(response.body);
         var arrayContacts = [];
 

@@ -1,5 +1,7 @@
 var express = require('express');
 var request = require("request");
+var async = require('async');
+var unique = require('array-unique');
 var router = express.Router();
 
 
@@ -7,7 +9,7 @@ var router = express.Router();
 router.get('/lists', function(req, res, next) {
     var idUser = req.query.idUser
     console.log(idUser);
-    var url = "http://world.conektta.info/api/contatos/getListas/"+idUser;
+    var url = "http://world.conektta.info/api/contatos/getListasSms/"+idUser;
     request({
         uri: url,
         method: "GET"
@@ -24,7 +26,7 @@ router.get('/lists', function(req, res, next) {
 });
 
 router.post('/createLists', function(req, res, next) {
-    var url = "http://world.conektta.info/api/contatos/addlist";
+    var url = "http://world.conektta.info/api/contatos/addlistsms";
 
     console.log(req.body);
     request({
@@ -67,7 +69,7 @@ router.get('/contacts', function(req, res, next) {
 
 router.post('/contactsToList', function(req, res, next) {
     console.log(req.body);
-    var url = "http://world.conektta.info/api/contatos/getContatosListas?arr_listas="+req.body;
+    var url = "http://world.conektta.info/api/contatos/getContatosListasSms?arr_listas="+req.body;
     console.log(url);
     request({
         uri: url,
@@ -77,8 +79,9 @@ router.post('/contactsToList', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-
+        console.log(response.body);
         var json = JSON.parse(response.body);
+        console.log(json);
         var arrayContacts = [];
 
         async.forEach(json, function (item) {
