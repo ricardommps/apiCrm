@@ -10,16 +10,8 @@ var io = require('socket.io').listen(8080);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var addCampaigns = require('./routes/addCampaigns');
-var contactdb = require('./routes/contactdb');
-var contactsList = require('./routes/contactsList');
-var wordConekttaApi = require('./routes/wordConekttaApi');
-var showContactList  = require('./routes/showContactList');
-var createCampaigns = require('./routes/createCampaigns');
-var createAndSendEmailMk = require('./routes/createAndSendEmailMk');
-var campaigns = require('./routes/campaigns');
-var sendCampaigns = require('./routes/sendCampaigns');
 
+var wordConekttaApi = require('./routes/wordConekttaApi');
 
 var creditOperation = require('./routes/creditOperation');
 var smtpAmazon = require('./routes/smtpAmazon');
@@ -27,6 +19,7 @@ var sms = require('./routes/sms');
 var email = require('./routes/email');
 var login = require('./routes/login');
 var createTemplateEmail = require('./routes/createTemplateEmail');
+var relatorios = require('./routes/relatorios');
 
 var teste = require('./routes/teste');
 
@@ -63,14 +56,7 @@ app.use(passport.initialize());
 // demo Route (GET http://localhost:8080)
 app.use('/', index);
 app.use('/api/users', users);
-app.use('/api/addCampaigns',addCampaigns);
-app.use('/api/contactdb',contactdb);
-app.use('/api/contactsList',contactsList);
-app.use('/api/showContactList',showContactList);
-app.use('/api/createCampaigns',createCampaigns);
-app.use('/api/createAndSendEmailMk',createAndSendEmailMk);
-app.use('/api/campaigns',campaigns);
-app.use('/api/sendCampaigns',sendCampaigns);
+
 
 app.use('/api/creditOperation',creditOperation);
 app.use('/api/wordConekttaApi',wordConekttaApi);
@@ -79,6 +65,7 @@ app.use('/api/sms',sms);
 app.use('/api/email',email);
 app.use('/api/smtpAmazon',smtpAmazon);
 app.use('/api/createTemplateEmail',createTemplateEmail);
+app.use('/api/relatorios',relatorios);
 app.use('/api/teste',teste);
 
 app.use(allowCrossDomain);
