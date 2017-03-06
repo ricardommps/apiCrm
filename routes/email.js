@@ -1,12 +1,13 @@
 var express = require('express');
 var request = require("request");
+var async = require('async');
+var unique = require('array-unique');
 var router = express.Router();
 
 
 
 router.get('/lists', function(req, res, next) {
-    var idUser = req.query.idUser
-    console.log(idUser);
+    var idUser = req.query.idUser;
     var url = "http://world.conektta.info/api/contatos/getListas/"+idUser;
     request({
         uri: url,
@@ -67,7 +68,7 @@ router.get('/contacts', function(req, res, next) {
 
 router.post('/contactsToList', function(req, res, next) {
     console.log(req.body);
-    var url = "http://world.conektta.info/api/contatos/getContatosListassms?arr_listas="+req.body;
+    var url = "http://world.conektta.info/api/contatos/getContatosListas?arr_listas="+req.body;
     console.log(url);
     request({
         uri: url,

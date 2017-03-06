@@ -11,15 +11,15 @@ var io = require('socket.io').listen(8080);
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-var wordConekttaApi = require('./routes/wordConekttaApi');
-
-var creditOperation = require('./routes/creditOperation');
-var smtpAmazon = require('./routes/smtpAmazon');
-var sms = require('./routes/sms');
-var email = require('./routes/email');
-var login = require('./routes/login');
-var createTemplateEmail = require('./routes/createTemplateEmail');
-var relatorios = require('./routes/relatorios');
+var wordConekttaApi         = require('./routes/wordConekttaApi');
+var creditOperation         = require('./routes/creditOperation');
+var smtpAmazon              = require('./routes/smtpAmazon');
+var usuariosSmartWifi       = require('./routes/usuariosSmartWifi');
+var sms                     = require('./routes/sms');
+var email                   = require('./routes/email');
+var login                   = require('./routes/login');
+var createTemplateEmail     = require('./routes/createTemplateEmail');
+var relatorios              = require('./routes/relatorios');
 
 var teste = require('./routes/teste');
 
@@ -62,6 +62,7 @@ app.use('/api/creditOperation',creditOperation);
 app.use('/api/wordConekttaApi',wordConekttaApi);
 app.use('/api/login',login);
 app.use('/api/sms',sms);
+app.use('/api/usuariosSmartWifi',usuariosSmartWifi);
 app.use('/api/email',email);
 app.use('/api/smtpAmazon',smtpAmazon);
 app.use('/api/createTemplateEmail',createTemplateEmail);
