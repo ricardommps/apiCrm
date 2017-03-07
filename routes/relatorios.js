@@ -16,7 +16,8 @@ router.post('/all', function(req, res, next) {
         if (error) {
             res.send(error);
         }
-        res.json({ success: true, reponse: body });
+        console.log(body);
+        res.json({ success: true, response: body });
 
     })
 });

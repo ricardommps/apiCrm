@@ -61,16 +61,21 @@ router.get('/list', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-        var arrayResponse = JSON.parse(response.body);
-        var responseArray = [];
-        async.forEach(arrayResponse, function (value) {
-            if(value.status === "A" || value.status === "L" ){
-                responseArray.push(value);
-            }
-        });
-        var json = JSON.stringify(responseArray);
-        console.log(json);
-        res.json({ success: true, response: json });
+        if(response.body == 'Nao existem licencas para esse usuario'){
+            res.json({ success: false, response: response.body });
+        }else{
+            var arrayResponse = JSON.parse(response.body);
+            var responseArray = [];
+            async.forEach(arrayResponse, function (value) {
+                if(value.status === "A" || value.status === "L" ){
+                    responseArray.push(value);
+                }
+            });
+            var json = JSON.stringify(responseArray);
+            console.log(json);
+            res.json({ success: true, response: json });
+        }
+
 
     })
 
