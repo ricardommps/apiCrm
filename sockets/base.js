@@ -9,7 +9,7 @@ var rooms = [];
 var SMSAPI = require('smsapicom'),
     smsapi = new SMSAPI();
 smsapi.authentication
-    .login('conektta', 'b7d76ae495b90e0b5f7f6f7b7199a389');
+    .login('xxx', 'xxxxx');
 
 
 

@@ -1,5 +1,6 @@
 var express = require('express');
 var request = require("request");
+var async = require('async');
 var router = express.Router();
 
 
@@ -50,7 +51,7 @@ router.post('/register', function(req, res, next) {
 router.get('/list', function(req, res, next) {
     var userId = req.query.idUser;
     console.log(userId);
-    var url = "http://world.conektta.info/api/estabelecimentos?where[id_usuario]="+userId;
+    var url = "http://world.conektta.info/api/licencas/listar/"+userId;
     console.log(url);
     request({
         uri: url,
@@ -60,7 +61,16 @@ router.get('/list', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-        res.json({ success: true, response: response.body });
+        var arrayResponse = JSON.parse(response.body);
+        var responseArray = [];
+        async.forEach(arrayResponse, function (value) {
+            if(value.status === "A" || value.status === "L" ){
+                responseArray.push(value);
+            }
+        });
+        var json = JSON.stringify(responseArray);
+        console.log(json);
+        res.json({ success: true, response: json });
 
     })
 
