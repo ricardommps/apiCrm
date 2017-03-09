@@ -20,6 +20,7 @@ var email                   = require('./routes/email');
 var login                   = require('./routes/login');
 var createTemplateEmail     = require('./routes/createTemplateEmail');
 var relatorios              = require('./routes/relatorios');
+var dashboard               = require('./routes/dashboard');
 
 var teste = require('./routes/teste');
 
@@ -67,6 +68,7 @@ app.use('/api/email',email);
 app.use('/api/smtpAmazon',smtpAmazon);
 app.use('/api/createTemplateEmail',createTemplateEmail);
 app.use('/api/relatorios',relatorios);
+app.use('/api/dashboard',dashboard);
 app.use('/api/teste',teste);
 
 app.use(allowCrossDomain);

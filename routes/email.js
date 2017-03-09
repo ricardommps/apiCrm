@@ -99,7 +99,7 @@ router.post('/contactsToList', function(req, res, next) {
 
 router.post('/campaigns', function(req, res, next){
     var url = "http://world.conektta.info/api/campanhas/add";
-
+    console.log(req.body);
     request({
         uri: url,
         method: "POST",
@@ -111,7 +111,6 @@ router.post('/campaigns', function(req, res, next){
         if (error) {
             res.json({ success: false, reponse: error });
         }
-        console.log(body);
         res.json({ success: true, reponse: body });
 
     })

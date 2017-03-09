@@ -17,7 +17,12 @@ router.post('/all', function(req, res, next) {
             res.send(error);
         }
         console.log(body);
-        res.json({ success: true, response: body });
+        if(body == 'Nao existem conexoes neste PA'){
+            res.json({ success: false, response: body });
+        }else{
+            res.json({ success: true, response: body });
+        }
+
 
     })
 });

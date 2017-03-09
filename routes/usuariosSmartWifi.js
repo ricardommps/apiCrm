@@ -4,6 +4,23 @@ var async = require('async');
 var router = express.Router();
 
 
+router.get('/queryZipCod', function(req, res, next) {
+    var cep = req.query.cep;
+    var url = "https://viacep.com.br/ws/"+cep+"/json/"
+
+    request({
+        uri: url,
+        method: "GET"
+    }, function(error, response, body) {
+        if (error) {
+            console.log(error);
+            res.json(error);
+        }
+
+        res.json(response.body);
+
+    })
+});
 
 router.get('/queryLicense', function(req, res, next) {
     var license = req.query.licensa;
