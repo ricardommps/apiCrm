@@ -7,6 +7,7 @@ var cors        = require('cors');
 
 var port        = process.env.PORT || 3000;
 var io = require('socket.io').listen(8080);
+module.exports = io;
 
 var index = require('./routes/index');
 var users = require('./routes/users');

@@ -17,9 +17,31 @@ router.get('/listsUsers', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-        console.log(response.body);
+       // console.log(response.body);
         // var jsonres = JSON.parse(response.body);
         res.json(response.body);
+
+    })
+});
+
+router.get('/listsLastUsers', function(req, res, next) {
+    var idUser = req.query.idUser;
+    var url = "http://world.conektta.info/api/contatos/getconectados/"+idUser;
+    console.log(">>>>>>>listsLastUsers<<<<<<<");
+    console.log(url);
+    console.log(">>>>>>>   <<<<<<<");
+    request({
+        uri: url,
+        method: "GET"
+    }, function(error, response, body) {
+        if (error) {
+            console.log(error);
+            res.json(error);
+        }
+
+        res.json(response.body);
+
+
 
     })
 });
@@ -36,7 +58,7 @@ router.get('/listCampaignsEmail', function(req, res, next){
             console.log(error);
             res.json(error);
         }
-        console.log(response.body);
+        //console.log(response.body);
         // var jsonres = JSON.parse(response.body);
         res.json(response.body);
 
@@ -55,7 +77,7 @@ router.get('/listCampaignsSms', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-        console.log(response.body);
+      //  console.log(response.body);
         // var jsonres = JSON.parse(response.body);
         res.json(response.body);
 
