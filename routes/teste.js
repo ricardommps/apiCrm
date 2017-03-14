@@ -6,10 +6,12 @@ var io = require('../app');
 
 
 router.post('/', function(req, res, next) {
-    res.json(req.body);
+    console.log(io.on);
     io.on('connection', function (socket){
-        socket.emit('send:teste', response.body);
+        console.log(socket);
+        socket.broadcast.emit('send:teste', response.body);
     });
+    res.json(req.body);
 
 
 });

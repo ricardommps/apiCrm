@@ -4,10 +4,10 @@ var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var passport    = require('passport');
 var cors        = require('cors');
+var apiRoutes = express.Router();
 
 var port        = process.env.PORT || 3000;
 var io = require('socket.io').listen(8080);
-module.exports = io;
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -23,7 +23,7 @@ var createTemplateEmail     = require('./routes/createTemplateEmail');
 var relatorios              = require('./routes/relatorios');
 var dashboard               = require('./routes/dashboard');
 
-var teste = require('./routes/teste');
+//var teste = require('./routes/teste');
 
 
 // get our request parameters
@@ -70,7 +70,8 @@ app.use('/api/smtpAmazon',smtpAmazon);
 app.use('/api/createTemplateEmail',createTemplateEmail);
 app.use('/api/relatorios',relatorios);
 app.use('/api/dashboard',dashboard);
-app.use('/api/teste',teste);
+//app.use('/api/teste',teste);
+app.use('/api', apiRoutes);
 
 app.use(allowCrossDomain);
 app.use(cors({origin: '*'}));
@@ -99,6 +100,13 @@ require('./sockets/base')(io);
 require('./sockets/emailBase')(io);
 require('./sockets/smsBase')(io);
 
+apiRoutes.post('/teste' , function(req, res){
+
+    //res.json(req.body);
+    io.sockets.emit('send:teste', req.body);
+    res.json(200, {message: "Message received!"});
+
+});
 
 
 // Start the server
