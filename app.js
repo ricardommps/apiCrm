@@ -103,7 +103,7 @@ require('./sockets/smsBase')(io);
 apiRoutes.post('/teste' , function(req, res){
 
     //res.json(req.body);
-    io.sockets.emit('send:teste', req.body);
+    io.sockets.emit('send:teste', res.body);
     res.json(200, {message: "Message received!"});
 
 });
