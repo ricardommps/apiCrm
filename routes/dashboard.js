@@ -27,9 +27,6 @@ router.get('/listsUsers', function(req, res, next) {
 router.get('/listsLastUsers', function(req, res, next) {
     var idUser = req.query.idUser;
     var url = "http://world.conektta.info/api/contatos/getconectados/"+idUser;
-    console.log(">>>>>>>listsLastUsers<<<<<<<");
-    console.log(url);
-    console.log(">>>>>>>   <<<<<<<");
     request({
         uri: url,
         method: "GET"

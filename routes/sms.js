@@ -60,9 +60,12 @@ router.get('/contacts', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-        console.log(response.body);
-        // var jsonres = JSON.parse(response.body);
-        res.json(response.body);
+        if(response.body == "Nao existem contatos para esse usuario"){
+            res.json({ success: false, response: response.body });
+        }else{
+
+            res.json({ success: true, response: response.body });
+        }
 
     })
 });
