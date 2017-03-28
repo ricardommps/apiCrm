@@ -17,7 +17,7 @@ router.get('/lists', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-        console.log(response.body);
+        //console.log(response.body);
         // var jsonres = JSON.parse(response.body);
         res.json(response.body);
 
@@ -40,8 +40,7 @@ router.post('/createLists', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-        console.log(">>>>>>>><<<<<<<<");
-        console.log(response.body);
+
         // var jsonres = JSON.parse(response.body);
         res.json(response.body);
 
@@ -72,9 +71,9 @@ router.get('/contacts', function(req, res, next) {
 });
 
 router.post('/contactsToList', function(req, res, next) {
-    console.log(req.body);
+
     var url = "http://world.conektta.info/api/contatos/getContatosListas?arr_listas="+req.body;
-    console.log(url);
+
     request({
         uri: url,
         method: "GET"
@@ -104,7 +103,7 @@ router.post('/contactsToList', function(req, res, next) {
 
 router.post('/campaigns', function(req, res, next){
     var url = "http://world.conektta.info/api/campanhas/add";
-    console.log(req.body);
+    //console.log(req.body);
     request({
         uri: url,
         method: "POST",
@@ -124,7 +123,7 @@ router.post('/campaigns', function(req, res, next){
 router.get('/campaigns', function(req, res, next){
     var idUser = req.query.idUser
     var url = "http://world.conektta.info/api/campanhas?where[id_dono_campanha]="+idUser;
-    console.log(url);
+    //console.log(url);
     request({
         uri: url,
         method: "GET"
@@ -133,9 +132,28 @@ router.get('/campaigns', function(req, res, next){
             console.log(error);
             res.json(error);
         }
-        console.log(response.body);
+       // console.log(response.body);
         // var jsonres = JSON.parse(response.body);
         res.json(response.body);
+
+    })
+});
+
+router.post('/createTemplate', function(req, res, next){
+    var url = "https://api.elasticemail.com/template/add?version=2";
+    request({
+        uri: url,
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+        form:req.body
+    }, function(error, response, body) {
+        if (error) {
+            res.json({ success: false, reponse: error });
+        }
+        //console.log(body);
+        res.json(body);
 
     })
 });

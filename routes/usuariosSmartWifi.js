@@ -68,7 +68,7 @@ router.post('/register', function(req, res, next) {
 router.get('/list', function(req, res, next) {
     var userId = req.query.idUser;
     console.log(userId);
-    var url = "http://world.conektta.info/api/licencas/listar/"+userId;
+    var url = "http://world.conektta.info/api/licencas/listarestabelecimentos/"+userId;
     console.log(url);
     request({
         uri: url,
