@@ -122,7 +122,7 @@ router.post('/campaigns', function(req, res, next){
 
 router.get('/campaigns', function(req, res, next){
     var idUser = req.query.idUser
-    var url = "http://world.conektta.info/api/campanhas?where[id_dono_campanha]="+idUser;
+    var url = "http://world.conektta.info/api/campanhas?where[id_dono_campanha]=" + idUser + "&limit=50";
     //console.log(url);
     request({
         uri: url,
