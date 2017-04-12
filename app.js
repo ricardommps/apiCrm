@@ -22,6 +22,9 @@ var login                   = require('./routes/login');
 var createTemplateEmail     = require('./routes/createTemplateEmail');
 var relatorios              = require('./routes/relatorios');
 var dashboard               = require('./routes/dashboard');
+var ads                     = require('./routes/ads');
+var estatisticas            = require('./routes/estatisticas');
+var uploadBanner            = require('./routes/uploadBanner');
 
 //var teste = require('./routes/teste');
 
@@ -40,6 +43,7 @@ var allowCrossDomain = function(req, res, next) {
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
         res.send(200);
+
     }
     else {
         res.header('Access-Control-Allow-Origin', '*');
@@ -70,6 +74,10 @@ app.use('/api/smtpAmazon',smtpAmazon);
 app.use('/api/createTemplateEmail',createTemplateEmail);
 app.use('/api/relatorios',relatorios);
 app.use('/api/dashboard',dashboard);
+app.use('/api/ads',ads);
+app.use('/api/estatisticas',estatisticas);
+app.use('/api/uploadBanner',uploadBanner);
+
 //app.use('/api/teste',teste);
 app.use('/api', apiRoutes);
 

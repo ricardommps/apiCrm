@@ -32,11 +32,15 @@ router.get('/listsLastUsers', function(req, res, next) {
         method: "GET"
     }, function(error, response, body) {
         if (error) {
-            console.log(error);
             res.json(error);
         }
 
-        res.json(response.body);
+        try{
+            res.json(response.body);
+        }catch (err){
+            res.json(err);
+        }
+
 
 
 
@@ -57,7 +61,12 @@ router.get('/listCampaignsEmail', function(req, res, next){
         }
         //console.log(response.body);
         // var jsonres = JSON.parse(response.body);
-        res.json(response.body);
+        try{
+            res.json(response.body);
+        }catch (err){
+            res.json(err);
+        }
+
 
     })
 });
@@ -80,6 +89,7 @@ router.get('/listCampaignsSms', function(req, res, next) {
 
     })
 });
+
 
 
 module.exports = router;
