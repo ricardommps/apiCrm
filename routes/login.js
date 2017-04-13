@@ -20,21 +20,26 @@ router.get('/', function(req, res, next) {
         if (error) {
             res.json(error);
         }
-        var jsonres = JSON.parse(response.body);
+        try{
+            var jsonres = JSON.parse(response.body);
 
-        if(jsonres[0]){
-            var token = jwt.sign({
-                exp: 1440,
-                data: user
-            }, 'secret');
-            res.json({
-                success: true,
-                user: response.body,
-                token: token
-            });
-        }else{
-            res.json({ success: false, message: 'Authentication failed. User not found.' });
+            if(jsonres[0]){
+                var token = jwt.sign({
+                    exp: 1440,
+                    data: user
+                }, 'secret');
+                res.json({
+                    success: true,
+                    user: response.body,
+                    token: token
+                });
+            }else{
+                res.json({ success: false, message: 'Authentication failed. User not found.' });
+            }
+        }catch (err){
+
         }
+
 
         //res.json(response.body);
     });

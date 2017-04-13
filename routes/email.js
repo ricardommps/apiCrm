@@ -58,12 +58,19 @@ router.get('/contacts', function(req, res, next) {
             console.log(error);
             res.json(error);
         }
-        if(response.body == "Nao existem contatos para esse usuario"){
-            res.json({ success: false, response: response.body });
-        }else{
+        try{
+            if(response.body == "Nao existem contatos para esse usuario"){
+                res.json({ success: false, response: response.body });
+            }else{
 
-            res.json({ success: true, response: response.body });
+                res.json({ success: true, response: response.body });
+            }
+        }catch (err){
+            res.json({ success: false, response: err });
         }
+
+
+
 
 
 

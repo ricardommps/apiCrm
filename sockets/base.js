@@ -148,15 +148,20 @@ module.exports = function (io) {
                 if (error) {
                     socket.broadcast.emit('send:errorBalanceSms', error, data);
                 }
-                if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
-                    response.body == '"parametro invalido"') {
-                    // console.log(">>>ERROR")
-                    socket.emit('send:errorBalanceSms', response.body, data);
+                try{
+                    if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
+                        response.body == '"parametro invalido"') {
+                        // console.log(">>>ERROR")
+                        socket.emit('send:errorBalanceSms', response.body, data);
 
-                } else {
-                    // console.log(response.body);
-                    socket.emit('send:sucessBalanceSms', response.body, data);
+                    } else {
+                        // console.log(response.body);
+                        socket.emit('send:sucessBalanceSms', response.body, data);
+                    }
+                }catch (err){
+                    socket.emit('send:errorBalanceSms', err, data);
                 }
+
 
             })
         });
