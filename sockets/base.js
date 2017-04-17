@@ -53,6 +53,7 @@ module.exports = function (io) {
         });
 
         socket.on('send:sendSms', function (data, callback) {
+            console.log("sendSms");
             var operation = data.operation[0];
             var create = data.create[0];
             var credits = data.credits;
@@ -96,8 +97,8 @@ module.exports = function (io) {
                                             // console.log(error);
                                             callback(error);
                                         }
-                                        //  console.log(body);
-                                        if (body == "Dados inseridos com sucess") {
+                                        console.log(body);
+                                        if (body == "Dados inseridos com sucesso") {
 
                                             // Atualiza credito
                                             updateCreditsSms(operation.id_usuario, function (response) {
@@ -168,6 +169,7 @@ module.exports = function (io) {
 
 
         var updateCreditsSms = function (idUser, callback) {
+            console.log("updateCreditsSms");
             var url = "http://world.conektta.info/api/credits/" + idUser + "/sms";
             //console.log(url);
             request = require("request");
