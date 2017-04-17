@@ -51,7 +51,7 @@ router.post('/createLists', function(req, res, next) {
 
 router.get('/contacts', function(req, res, next) {
     var idUser = req.query.idUser
-    var url = "http://world.conektta.info/api/contatos/getContatos/"+ idUser + "?where[phone_number]";
+    var url = "http://world.conektta.info/api/contatos/getContatosSms/"+ idUser;
     request({
         uri: url,
         method: "GET"
