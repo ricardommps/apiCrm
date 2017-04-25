@@ -7,26 +7,32 @@ var router = express.Router();
 
 
 router.get('/lists', function(req, res, next) {
+    var token = "?api_token="+global.token;
     var idUser = req.query.idUser
     console.log(idUser);
-    var url = "http://world.conektta.info/api/contatos/getListasSms/"+idUser;
+    var url = "http://world.conektta.info/api/contatos/getListasSms/"+idUser + token;
     request({
         uri: url,
         method: "GET"
     }, function(error, response, body) {
         if (error) {
-            console.log(error);
-            res.json(error);
+            res.send(error);
+            return;
         }
-        console.log(response.body);
-        // var jsonres = JSON.parse(response.body);
-        res.json(response.body);
+        try{
+            res.json(response.body);
+        }catch (err){
+            res.send(err);
+            return;
+        }
+
 
     })
 });
 
 router.post('/createLists', function(req, res, next) {
-    var url = "http://world.conektta.info/api/contatos/addlistsms";
+    var token = "?api_token="+global.token;
+    var url = "http://world.conektta.info/api/contatos/addlistsms" + token;
 
     console.log(req.body);
     request({
@@ -38,27 +44,31 @@ router.post('/createLists', function(req, res, next) {
         form:req.body
     }, function(error, response, body) {
         if (error) {
-            console.log(error);
-            res.json(error);
+            res.send(error);
+            return;
         }
-        console.log(">>>>>>>><<<<<<<<");
-        console.log(response.body);
-        // var jsonres = JSON.parse(response.body);
-        res.json(response.body);
+        try{
+            res.json(response.body);
+        }catch (err){
+            res.send(err);
+            return;
+        }
+
 
     })
 });
 
 router.get('/contacts', function(req, res, next) {
+    var token = "?api_token="+global.token;
     var idUser = req.query.idUser
-    var url = "http://world.conektta.info/api/contatos/getContatosSms/"+ idUser;
+    var url = "http://world.conektta.info/api/contatos/getContatosSms/"+ idUser + token;
     request({
         uri: url,
         method: "GET"
     }, function(error, response, body) {
         if (error) {
-            console.log(error);
-            res.json(error);
+            res.send(error);
+            return;
         }
         if(response.body == "Nao existem contatos para esse usuario"){
             res.json({ success: false, response: response.body });
@@ -71,40 +81,44 @@ router.get('/contacts', function(req, res, next) {
 });
 
 router.post('/contactsToList', function(req, res, next) {
-    console.log(req.body);
-    var url = "http://world.conektta.info/api/contatos/getContatosListasSms?arr_listas="+req.body;
-    console.log(url);
+    var token = "&api_token="+global.token;
+    var url = "http://world.conektta.info/api/contatos/getContatosListasSms?arr_listas="+
+        req.body + token;
     request({
         uri: url,
         method: "GET"
     }, function(error, response, body) {
         if (error) {
-            console.log(error);
-            res.json(error);
+            res.send(error);
+            return;
         }
-        console.log(response.body);
-        var json = JSON.parse(response.body);
-        console.log(json);
-        var arrayContacts = [];
 
-        async.forEach(json, function (item) {
+        try {
+            var json = JSON.parse(response.body);
+            var arrayContacts = [];
+            async.forEach(json, function (item) {
 
-            async.forEach(item, function (item2) {
-                arrayContacts.push(item2);
+                async.forEach(item, function (item2) {
+                    arrayContacts.push(item2);
 
+                });
             });
-        });
 
-        arrayContacts = unique(arrayContacts);
-        // var jsonres = JSON.parse(response.body);
-        res.json(arrayContacts);
+            arrayContacts = unique(arrayContacts);
+            // var jsonres = JSON.parse(response.body);
+            res.json(arrayContacts);
+        }catch (err){
+            res.send(err);
+            return;
+        }
+
 
     })
 });
 
 router.post('/campaigns', function(req, res, next){
-    var url = "http://world.conektta.info/api/sms/add";
-    console.log(url);
+    var token = "?api_token="+global.token;
+    var url = "http://world.conektta.info/api/sms/add" + token;
     request({
         uri: url,
         method: "POST",
@@ -114,30 +128,41 @@ router.post('/campaigns', function(req, res, next){
         form:req.body
     }, function(error, response, body) {
         if (error) {
-            res.json({ success: false, reponse: error });
+            res.send(error);
+            return;
         }
-        console.log(body);
-        res.json({ success: true, reponse: body });
+       try{
+           res.json({ success: true, reponse: body });
+       }catch (err){
+           res.send(err);
+           return;
+       }
+
 
     })
 });
 
 
 router.get('/campaigns', function(req, res, next) {
+    var token = "&api_token="+global.token;
     var idUser = req.query.idUser
-    var url = "http://world.conektta.info/api/sms?where[id_dono_campanha]=" + idUser;
-    console.log(url);
+    var url = "http://world.conektta.info/api/sms?where[id_dono_campanha]=" +
+        idUser + token;
     request({
         uri: url,
         method: "GET"
     }, function (error, response, body) {
         if (error) {
-            console.log(error);
-            res.json(error);
+            res.send(error);
+            return;
         }
-        console.log(response.body);
-        // var jsonres = JSON.parse(response.body);
-        res.json(response.body);
+        try{
+            res.json(response.body);
+        }catch (err){
+            res.send(err);
+            return;
+        }
+
 
     })
 });

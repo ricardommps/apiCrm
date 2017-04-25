@@ -96,8 +96,8 @@ module.exports = function (io) {
             //console.log(operation.valor);
             // console.log(credits);
             if (operation.valor < credits) {
-
-                var url = "http://world.conektta.info/api/credits/add";
+                var token = "?api_token="+global.token;
+                var url = "http://world.conektta.info/api/credits/add" + token;
                 request = require("request");
                 request({
                     uri: url,
@@ -139,8 +139,9 @@ module.exports = function (io) {
 
         socket.on('send:balanceEmail', function (data) {
             // var id_usuario = req.param('idUsuario');
-
-            var url = "http://world.conektta.info/api/credits/" + data.id + "/email";
+            var token = "?api_token="+global.token;
+            var url = "http://world.conektta.info/api/credits/" +
+                data.id + "/email" + token;
             request = require("request");
             request({
                 uri: url,
@@ -167,7 +168,8 @@ module.exports = function (io) {
 
 
         var updateCreditsEmail = function (idUser, callback) {
-            var url = "http://world.conektta.info/api/credits/" + idUser + "/email";
+            var token = "?api_token="+global.token;
+            var url = "http://world.conektta.info/api/credits/" + idUser + "/email" + token;
             //console.log(url);
             request = require("request");
             request({

@@ -37,18 +37,18 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 var allowCrossDomain = function(req, res, next) {
-    console.log(req.method);
-    if ('OPTIONS' == req.method) {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-        res.send(200);
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
+   // console.log(req.headers['authorization']);
+    global.token = req.headers['authorization'];
 
+
+    if ('OPTIONS' == req.method) {
+        res.send(200);
     }
     else {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
         next();
     }
 };
@@ -85,8 +85,10 @@ app.use(allowCrossDomain);
 app.use(cors({origin: '*'}));
 app.disable('etag');
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+    console.log(">>> URL: "+req.url);
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -102,6 +104,9 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+
+
 // set up our socket server
 
 require('./sockets/base')(io);
@@ -114,6 +119,10 @@ apiRoutes.post('/teste' , function(req, res){
     io.sockets.emit('send:teste', req.body);
     res.json(200, {message: "Message received!"});
 
+});
+
+app.get("/", function (req, res) {
+    console.log(">>>>>>>>aki");
 });
 
 

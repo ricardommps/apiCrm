@@ -13,27 +13,31 @@ router.get('/queryZipCod', function(req, res, next) {
         method: "GET"
     }, function(error, response, body) {
         if (error) {
-            console.log(error);
-            res.json(error);
+            res.send(error);
+            return;
+        }
+        try{
+            res.json(response.body);
+        }catch (err){
+            res.send(err);
+            return;
         }
 
-        res.json(response.body);
 
     })
 });
 
 router.get('/queryLicense', function(req, res, next) {
+    var token = "?api_token="+global.token;
     var license = req.query.licensa;
-    console.log(license);
-    var url = "http://world.conektta.info/api/licencas/consulta/"+license;
-    console.log(url);
+    var url = "http://world.conektta.info/api/licencas/consulta/"+license + token;
     request({
         uri: url,
         method: "GET"
     }, function(error, response, body) {
         if (error) {
-            console.log(error);
-            res.json(error);
+            res.send(error);
+            return;
         }
         if(response.body === 'A licença esta Disponivel'){
             res.json({ success: true, reponse: response.body });
@@ -46,10 +50,8 @@ router.get('/queryLicense', function(req, res, next) {
 });
 
 router.post('/register', function(req, res, next) {
-
-    var url = "http://world.conektta.info/api/estabelecimentos";
-    console.log(url);
-    console.log(req.body);
+    var token = "?api_token="+global.token;
+    var url = "http://world.conektta.info/api/estabelecimentos" + token;
     request({
         uri: url,
         method: "POST",
@@ -58,39 +60,50 @@ router.post('/register', function(req, res, next) {
 
         if (error) {
             res.send(error);
+            return;
         }
-        console.log(body);
-        res.json({ success: true, reponse: body });
+        try{
+            res.json({ success: true, reponse: body });
+        }catch (err){
+            res.send(err);
+            return;
+        }
+
 
     })
 });
 
 router.get('/list', function(req, res, next) {
+    var token = "?api_token="+global.token;
     var userId = req.query.idUser;
-    console.log(userId);
-    var url = "http://world.conektta.info/api/licencas/listarestabelecimentos/"+userId;
-    console.log(url);
+    var url = "http://world.conektta.info/api/licencas/listarestabelecimentos/"+userId + token;
     request({
         uri: url,
         method: "GET"
     }, function(error, response, body) {
         if (error) {
-            console.log(error);
-            res.json(error);
+            res.send(error);
+            return;
         }
         if(response.body == 'Nao existem licencas para esse usuario'){
             res.json({ success: false, response: response.body });
         }else{
-            var arrayResponse = JSON.parse(response.body);
-            var responseArray = [];
-            async.forEach(arrayResponse, function (value) {
-                if(value.status === "A" || value.status === "L" ){
-                    responseArray.push(value);
-                }
-            });
-            var json = JSON.stringify(responseArray);
-            console.log(json);
-            res.json({ success: true, response: json });
+
+            try{
+                var arrayResponse = JSON.parse(response.body);
+                var responseArray = [];
+                async.forEach(arrayResponse, function (value) {
+                    if(value.status === "A" || value.status === "L" ){
+                        responseArray.push(value);
+                    }
+                });
+                var json = JSON.stringify(responseArray);
+                res.json({ success: true, response: json });
+            }catch (err){
+                res.send(err);
+                return;
+            }
+
         }
 
 

@@ -3,14 +3,16 @@ var router = express.Router();
 
 /* GET home page. */
 router.post('/postDebit', function(req, res, next) {
-    var url = "http://world.conektta.info/api/credits/add";
+    var token = "?api_token="+global.token;
+    var url = "http://world.conektta.info/api/credits/add"+token;
     request({
         uri: url,
         method: "POST",
         form:req.body
     }, function(error, response, body) {
         if (error) {
-            res.json(error);
+            res.send(error);
+            return;
         }
         res.json({ success: true, message: body });
 
