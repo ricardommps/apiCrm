@@ -9,7 +9,9 @@ var crypto = require('crypto');
 
 router.post('/consultasUsers', function(req, res, next) {
     var url = "http://world.conektta.info/api/consultas/users";
-    request({
+    console.log(req.body);
+    res.send('respond with a resource');
+  /*  request({
         uri: url,
         method: "POST",
         form:req.body
@@ -26,8 +28,7 @@ router.post('/consultasUsers', function(req, res, next) {
             return;
         }
 
-
-    })
+    })*/
 });
 
 router.get('/', function(req, res, next) {

@@ -25,7 +25,7 @@ var dashboard               = require('./routes/dashboard');
 var ads                     = require('./routes/ads');
 var estatisticas            = require('./routes/estatisticas');
 var uploadBanner            = require('./routes/uploadBanner');
-
+var resetPassword           = require('./routes/resetPassword');
 //var teste = require('./routes/teste');
 
 
@@ -77,8 +77,8 @@ app.use('/api/dashboard',dashboard);
 app.use('/api/ads',ads);
 app.use('/api/estatisticas',estatisticas);
 app.use('/api/uploadBanner',uploadBanner);
+app.use('/api/resetPassword',resetPassword);
 
-//app.use('/api/teste',teste);
 app.use('/api', apiRoutes);
 
 app.use(allowCrossDomain);
