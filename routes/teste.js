@@ -8,6 +8,7 @@ var io = require('../app');
 router.post('/', function(req, res, next) {
     console.log(io.on);
     io.on('connection', function (socket){
+        console.log('>>>conektados<<<');
         console.log(socket);
         socket.broadcast.emit('send:teste', response.body);
     });

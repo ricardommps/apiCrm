@@ -101,9 +101,13 @@ module.exports = function (io) {
                                         }
                                         console.log(body);
                                         if (body == "Dados inseridos com sucesso") {
+                                            var dataCreditsAds = {
+                                                idUsuer :operation.id_usuario,
+                                                token : data.token
+                                            };
 
                                             // Atualiza credito
-                                            updateCreditsSms(operation.id_usuario, function (response) {
+                                            updateCredits(dataCreditsAds, function (response) {
                                                 // console.log(response);
                                                 if (response.status) {
                                                     callback(response.status);
@@ -220,6 +224,13 @@ module.exports = function (io) {
             callback("success!");
         });
 
+        socket.on('send:closeTemplate', function (data, callback) {
+            socket.broadcast.emit('send:closeTemplate', data);
+            // socket.broadcast.to("ricardommps").emit('send:templateEmail', data);
+            // this.io.emit('send:templateEmail', data);
+            callback("success!");
+        });
+
         //api/envios/enviarCampanha
 
         socket.on('send:sendEmail', function (data, callback) {
@@ -317,7 +328,10 @@ module.exports = function (io) {
                                                     }
                                                     if (bodyCredits == "Dados inseridos com sucess") {
 
-                                                        // Atualiza credito
+                                                        var dataCreditsAds = {
+                                                            idUsuer :operation.id_usuario,
+                                                            token : data.token
+                                                        };
                                                         updateCreditsEmail(operation.id_usuario, function (response) {
                                                             if (response.status) {
                                                                 callback({
@@ -497,6 +511,51 @@ module.exports = function (io) {
             })
         });
 
+        var updateCredits = function (data, callback) {
+
+            var idUser = data.idUsuer;
+            var token = "?api_token="+data.token;
+
+            var url = "http://world.conektta.info/api/credits/" + idUser + "/email" + token;
+            //console.log(url);
+            request = require("request");
+            request({
+                uri: url,
+                method: "GET"
+            }, function (error, response, body) {
+                console.log(response.body);
+                if (error) {
+                    socket.broadcast.emit('send:errorBalanceEmail', error, idUser);
+                    var returnJson = {
+                        status: false,
+                        returnObj: error
+                    };
+                    callback(returnJson);
+                    //return returnJson;
+                }
+                if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
+                    response.body == '"parametro invalido"') {
+                    socket.emit('send:errorBalanceEmail', response.body, idUser);
+                    var returnJson = {
+                        status: false,
+                        returnObj: response.body
+                    };
+                    callback(returnJson);
+
+                } else {
+                    socket.broadcast.emit('send:sucessBalanceEmail', response.body, idUser);
+
+
+                    var returnJson = {
+                        status: true,
+                        returnObj: response.body
+                    };
+                    callback(returnJson);
+                }
+
+            })
+        };
+
         var updateCreditsEmail = function (idUser, callback) {
             var token = "?api_token="+data.token;
             var url = "http://world.conektta.info/api/credits/" + idUser + "/email" + token;
@@ -556,7 +615,6 @@ module.exports = function (io) {
                 if (error) {
                     socket.broadcast.emit('send:errorBalanceAds', error, data.id);
                 }
-                console.log(response.body);
                 try{
                     if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
                         response.body == '"parametro invalido"') {
@@ -600,7 +658,7 @@ module.exports = function (io) {
                                             idUsuer :data.idUsuer,
                                             token : data.token
                                         }
-                                        updateCreditsAds(dataCreditsAds, function (response) {
+                                        updateCredits(dataCreditsAds, function (response) {
                                             // console.log(response);
                                             if (response.status) {
                                                 callback({
@@ -653,7 +711,7 @@ module.exports = function (io) {
                                             idUsuer :data.idUsuer,
                                             token : data.token
                                         };
-                                        updateCreditsAds(dataCreditsAds, function (response) {
+                                        updateCredits(dataCreditsAds, function (response) {
                                             // console.log(response);
                                             if (response.status) {
                                                 callback({

@@ -9,18 +9,36 @@ var adbutler = new AdButler({
 
 router.get('/campaignsList', function (req, res, next) {
 
-    adbutler.campaigns.banners.list({
-        limit: 100
+    var token = "?api_token="+global.token;
+    var id_user = req.query.id_user;
+    var url = "http://world.conektta.info/api/consultas/ads/" +
+        id_user + token;
+    console.log(url);
+    request({
+        uri: url,
+        method: "GET"
+    }, function(error, response, body) {
+        if (error) {
+            res.send(error);
+            return;
+        }
+        try{
+            if(response.body === '"Sem registros para esse usuario"'){
+                res.json({success:true,response:response.body});
+            }else{
+                res.json({success:true,response:JSON.parse(response.body)});
+            }
+
+        }catch (err){
+            res.json({success:false});
+            return;
+        }
+
     })
-        .then(function(banners) {
-            console.log(banners);
-            res.json({ success: true, banners: banners });
-        }).catch(function(bannersError) {
-            console.log(bannersError);
-        res.json({ success: false, banners: bannersError });
-    });
 
 });
+
+
 
 
 

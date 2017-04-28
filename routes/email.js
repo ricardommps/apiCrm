@@ -18,16 +18,12 @@ router.get('/lists', function(req, res, next) {
             res.send(error);
             return;
         }
-        //console.log(response.body);
-        // var jsonres = JSON.parse(response.body);
         try{
             res.json(response.body);
         }catch (err){
             res.send(err);
             return;
         }
-
-
     })
 });
 
@@ -82,11 +78,6 @@ router.get('/contacts', function(req, res, next) {
             res.json({ success: false, response: err });
         }
 
-
-
-
-
-
     })
 });
 
@@ -102,21 +93,25 @@ router.post('/contactsToList', function(req, res, next) {
             res.send(error);
             return;
         }
+        try{
+            var json = JSON.parse(response.body);
+            var arrayContacts = [];
 
-        var json = JSON.parse(response.body);
-        var arrayContacts = [];
+            async.forEach(json, function (item) {
 
-        async.forEach(json, function (item) {
+                async.forEach(item, function (item2) {
+                    arrayContacts.push(item2);
 
-            async.forEach(item, function (item2) {
-                arrayContacts.push(item2);
-
+                });
             });
-        });
 
-        arrayContacts = unique(arrayContacts);
-        // var jsonres = JSON.parse(response.body);
-        res.json(arrayContacts);
+            arrayContacts = unique(arrayContacts);
+            // var jsonres = JSON.parse(response.body);
+            res.json(arrayContacts);
+        }catch (err){
+            res.send(err);
+        }
+
 
     })
 });
@@ -197,6 +192,49 @@ router.post('/createTemplate', function(req, res, next){
         }
 
 
+    })
+});
+
+router.get('/getDadosCampanha', function(req, res, next) {
+    var token = "?api_token="+global.token;
+    var idUser = req.query.idUser;
+    var url = "http://world.conektta.info/api/campanhas/getDadosCampanha/"+idUser+token;
+    request({
+        uri: url,
+        method: "GET"
+    }, function(error, response, body) {
+        if (error) {
+            res.send(error);
+            return;
+        }
+        try{
+            res.json(JSON.parse(response.body));
+        }catch (err){
+            res.send(err);
+            return;
+        }
+    })
+});
+
+router.get('/getCampanha', function(req, res, next) {
+    var token = "?api_token="+global.token;
+    var idCampanha = req.query.idCampanha;
+    var url = "http://world.conektta.info/api/campanhas/getCampanha/"+idCampanha+token;
+    console.log(url);
+    request({
+        uri: url,
+        method: "GET"
+    }, function(error, response, body) {
+        if (error) {
+            res.send(error);
+            return;
+        }
+        console.log(body);
+        try{
+            res.json({success:true,response:JSON.parse(response.body)});
+        }catch (err){
+            res.json({success:false});
+        }
     })
 });
 
