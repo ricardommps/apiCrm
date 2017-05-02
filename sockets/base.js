@@ -76,9 +76,11 @@ module.exports = function (io) {
                         console.log(error);
                         callback(error);
                     }
-                    console.log(body);
-                    if (body === "Campanha gravada com sucesso") {
 
+                    console.log(body);
+                    console.log(sms);
+                    if (body === "Campanha gravada com sucesso") {
+                        console.log('>>>>Campanha gravada com sucesso<<<<<');
                         smsapi.message
                             .sms()
                             .from(sms.from)
@@ -86,19 +88,23 @@ module.exports = function (io) {
                             .message(sms.message)
                             .execute()
                             .then(function (result) {
-
+                                console.log(">>>>Result");
+                                console.log(result);
                                 if (result.count > 0) {
                                     var token = "?api_token="+data.token;
                                     var url = "http://world.conektta.info/api/credits/add" + token;
+                                    console.log('>>>>operation<<<<<');
+                                    console.log(operation);
                                     request({
                                         uri: url,
                                         method: "POST",
                                         form: operation
                                     }, function (error, response, body) {
                                         if (error) {
-                                            // console.log(error);
+                                            console.log(error);
                                             callback(error);
                                         }
+                                        console.log('>>>>body<<<<<');
                                         console.log(body);
                                         if (body == "Dados inseridos com sucesso") {
                                             var dataCreditsAds = {
@@ -108,7 +114,7 @@ module.exports = function (io) {
 
                                             // Atualiza credito
                                             updateCredits(dataCreditsAds, function (response) {
-                                                // console.log(response);
+                                                console.log(response);
                                                 if (response.status) {
                                                     callback(response.status);
                                                 }
@@ -133,6 +139,7 @@ module.exports = function (io) {
 
                             });
                     } else {
+                        console.log("!!!!!");
                         callback({
                             success: false,
                             mensage: "Errro ao gravar campanha"
@@ -544,7 +551,7 @@ module.exports = function (io) {
 
                 } else {
                     socket.broadcast.emit('send:sucessBalanceEmail', response.body, idUser);
-
+                    socket.emit('send:sucessBalanceEmail', response.body, idUser);
 
                     var returnJson = {
                         status: true,
@@ -637,8 +644,6 @@ module.exports = function (io) {
 
         socket.on('send:createAds', function (data, callback) {
             var file = data.adbutler.fileBanner;
-            console.log(data.adbutler.fileBanner);
-            console.log(data.typeBanner);
             if(data.typeBanner === 'imageBanner'){
                 imageBanner(data.adbutler, function (imageBannerRes) {
 

@@ -92,7 +92,7 @@ router.post('/contactsToList', function(req, res, next) {
             res.send(error);
             return;
         }
-
+        console.log(response.body);
         try {
             var json = JSON.parse(response.body);
             var arrayContacts = [];
