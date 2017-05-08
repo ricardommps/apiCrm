@@ -2,11 +2,15 @@ var express = require('express');
 var request = require("request");
 var async = require('async');
 var router = express.Router();
+var config = require('../config.json');
+var pathname = '';
+
 
 
 router.get('/queryZipCod', function(req, res, next) {
     var cep = req.query.cep;
-    var url = "https://viacep.com.br/ws/"+cep+"/json/"
+    var url = viacep_url + cep + "/json/";
+   // var url = "https://viacep.com.br/ws/"+cep+"/json/"
 
     request({
         uri: url,
@@ -30,7 +34,9 @@ router.get('/queryZipCod', function(req, res, next) {
 router.get('/queryLicense', function(req, res, next) {
     var token = "?api_token="+global.token;
     var license = req.query.licensa;
-    var url = "http://world.conektta.info/api/licencas/consulta/"+license + token;
+    pathname = 'licencas/consulta/';
+    var url = config.word_url + pathname + license + token;
+   // var url = "http://world.conektta.info/api/licencas/consulta/"+license + token;
     request({
         uri: url,
         method: "GET"
@@ -51,7 +57,9 @@ router.get('/queryLicense', function(req, res, next) {
 
 router.post('/register', function(req, res, next) {
     var token = "?api_token="+global.token;
-    var url = "http://world.conektta.info/api/estabelecimentos" + token;
+    pathname = 'estabelecimentos';
+    var url = config.word_url + pathname + token;
+   // var url = "http://world.conektta.info/api/estabelecimentos" + token;
     request({
         uri: url,
         method: "POST",
@@ -76,7 +84,9 @@ router.post('/register', function(req, res, next) {
 router.get('/list', function(req, res, next) {
     var token = "?api_token="+global.token;
     var userId = req.query.idUser;
-    var url = "http://world.conektta.info/api/licencas/listarestabelecimentos/"+userId + token;
+    pathname = 'licencas/listarestabelecimentos/';
+    var url = config.word_url + pathname + userId + token;
+    //var url = "http://world.conektta.info/api/licencas/listarestabelecimentos/"+userId + token;
     request({
         uri: url,
         method: "GET"

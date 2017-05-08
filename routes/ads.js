@@ -6,14 +6,15 @@ var async = require('async');
 var adbutler = new AdButler({
     'apiKey': 'ebe604963bdb8e8a5ddfa4794dac2563'
 });
+var config = require('../config.json');
+
 
 router.get('/campaignsList', function (req, res, next) {
 
     var token = "?api_token="+global.token;
     var id_user = req.query.id_user;
-    var url = "http://world.conektta.info/api/consultas/ads/" +
-        id_user + token;
-    console.log(url);
+    var pathname = 'consultas/ads/';
+    var url = config.word_url + pathname + id_user + token;
     request({
         uri: url,
         method: "GET"
@@ -35,6 +36,23 @@ router.get('/campaignsList', function (req, res, next) {
         }
 
     })
+
+});
+
+router.post('/stats', function (req, res, next) {
+
+    var settings = req.body;
+
+    adbutler.stats.read(settings)
+        .then(function (stats) {
+            console.log(stats);
+            res.json({success: true, response: stats});
+        })
+        .catch(function (statsError) {
+            console.log(statsError);
+            res.json({success: false, response: statsError});
+        });
+
 
 });
 

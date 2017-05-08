@@ -13,6 +13,9 @@ var zohoToken = "a41d3828cae33450cdd258a46f0e85f6";
 
 var fs = require('fs');
 
+var config = require('../config.json');
+var pathname = '';
+
 var SMSAPI = require('smsapicom'),
     smsapi = new SMSAPI();
 smsapi.authentication
@@ -30,28 +33,6 @@ module.exports = function (io) {
             rooms.push(jsonClient[0].username);
         });
 
-        socket.on('send:balanceSms', function (data) {
-            // var id_usuario = req.param('idUsuario');
-            var token = "?api_token="+data.token;
-            var url = "http://world.conektta.info/api/credits/" +
-                data.id + "/sms" + token;
-            request({
-                uri: url,
-                method: "GET"
-            }, function (error, response, body) {
-                if (error) {
-                    socket.broadcast.emit('send:errorBalanceSms', error, data);
-                }
-                try{
-                    socket.emit('send:sucessBalanceSms', response.body, data);
-                }catch (err){
-                    socket.broadcast.emit('send:errorBalanceSms', err, data);
-                }
-
-                // var jsonres = JSON.parse(response.body);
-                // res.json(response.body);
-            })
-        });
 
         socket.on('send:sendSms', function (data, callback) {
             var operation = data.operation[0];
@@ -62,8 +43,9 @@ module.exports = function (io) {
 
             if (create.Message.cost < credits) {
                 var token = "?api_token="+data.token;
-                var url = "http://world.conektta.info/api/sms/add" + token;
-                console.log(url);
+                pathname = 'sms/add';
+                var url = config.word_url + pathname +  token;
+                //var url = "http://world.conektta.info/api/sms/add" + token;
                 request({
                     uri: url,
                     method: "POST",
@@ -73,14 +55,10 @@ module.exports = function (io) {
                     form: create
                 }, function (error, response, body) {
                     if (error) {
-                        console.log(error);
                         callback(error);
                     }
 
-                    console.log(body);
-                    console.log(sms);
                     if (body === "Campanha gravada com sucesso") {
-                        console.log('>>>>Campanha gravada com sucesso<<<<<');
                         smsapi.message
                             .sms()
                             .from(sms.from)
@@ -88,24 +66,19 @@ module.exports = function (io) {
                             .message(sms.message)
                             .execute()
                             .then(function (result) {
-                                console.log(">>>>Result");
-                                console.log(result);
                                 if (result.count > 0) {
                                     var token = "?api_token="+data.token;
-                                    var url = "http://world.conektta.info/api/credits/add" + token;
-                                    console.log('>>>>operation<<<<<');
-                                    console.log(operation);
+                                    pathname = 'credits/add';
+                                    var url = config.word_url + pathname  + token;
+                                    //var url = "http://world.conektta.info/api/credits/add" + token;
                                     request({
                                         uri: url,
                                         method: "POST",
                                         form: operation
                                     }, function (error, response, body) {
                                         if (error) {
-                                            console.log(error);
                                             callback(error);
                                         }
-                                        console.log('>>>>body<<<<<');
-                                        console.log(body);
                                         if (body == "Dados inseridos com sucesso") {
                                             var dataCreditsAds = {
                                                 idUsuer :operation.id_usuario,
@@ -139,7 +112,6 @@ module.exports = function (io) {
 
                             });
                     } else {
-                        console.log("!!!!!");
                         callback({
                             success: false,
                             mensage: "Errro ao gravar campanha"
@@ -151,78 +123,6 @@ module.exports = function (io) {
                 callback();
             }
         });
-
-        socket.on('send:balanceSms', function (data) {
-            // var id_usuario = req.param('idUsuario');
-            var token = "?api_token="+data.token;
-            var url = "http://world.conektta.info/api/credits/" +
-                data.id + "/sms" + token;
-            request = require("request");
-            request({
-                uri: url,
-                method: "GET"
-            }, function (error, response, body) {
-                if (error) {
-                    socket.broadcast.emit('send:errorBalanceSms', error, data);
-                }
-                try{
-                    if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
-                        response.body == '"parametro invalido"') {
-                        // console.log(">>>ERROR")
-                        socket.emit('send:errorBalanceSms', response.body, data);
-
-                    } else {
-                        // console.log(response.body);
-                        socket.emit('send:sucessBalanceSms', response.body, data);
-                    }
-                }catch (err){
-                    socket.emit('send:errorBalanceSms', err, data);
-                }
-
-
-            })
-        });
-
-
-        var updateCreditsSms = function (idUser, callback) {
-            var token = "?api_token="+data.token;
-            var url = "http://world.conektta.info/api/credits/" + idUser + "/sms" + token;
-            //console.log(url);
-            request = require("request");
-            request({
-                uri: url,
-                method: "GET"
-            }, function (error, response, body) {
-                if (error) {
-                    socket.broadcast.emit('send:errorBalanceSms', error, idUser);
-                    var returnJson = {
-                        status: false,
-                        returnObj: error
-                    };
-                    callback(returnJson);
-                    //return returnJson;
-                }
-                if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
-                    response.body == '"parametro invalido"') {
-                    socket.emit('send:errorBalanceSms', response.body, idUser);
-                    var returnJson = {
-                        status: false,
-                        returnObj: response.body
-                    };
-                    callback(returnJson);
-
-                } else {
-                    socket.emit('send:sucessBalanceSms', response.body, idUser);
-                    socket.broadcast.emit('send:sucessBalanceSms', response.body, idUser);
-                    var returnJson = {
-                        status: true,
-                        returnObj: response.body
-                    };
-                    callback(returnJson);
-                }
-
-            })
-        };
 
         socket.on('send:templateEmail', function (data, callback) {
             socket.broadcast.emit('send:templateEmail', data);
@@ -252,7 +152,9 @@ module.exports = function (io) {
 
                 //// Salvar campanha
                 var token = "?api_token="+data.token;
-                var url = "http://world.conektta.info/api/campanhas/add" + token;
+                pathname = 'campanhas/add';
+                var url = config.word_url + pathname  + token;
+               // var url = "http://world.conektta.info/api/campanhas/add" + token;
 
                 request({
                     uri: url,
@@ -269,10 +171,13 @@ module.exports = function (io) {
                             mensage: error
                         });
                     }
+                    console.log(">>>> 1 <<<<");
+                    console.log(response.body);
                     try{
                         var campanha  = JSON.parse(response.body);
-                       // console.log(campanha.id);
-                        url = "https://api.elasticemail.com/template/add?version=2";
+
+                        //url = "https://api.elasticemail.com/template/add?version=2";
+                        url = config.elasticemail_url;
                         request({
                             uri: url,
                             method: "POST",
@@ -287,7 +192,8 @@ module.exports = function (io) {
                                     mensage: errorTemplate
                                 });
                             }
-
+                            console.log(">>>> 2 <<<<");
+                            console.log(bodyTemplate);
                             try{
                                 var templateJson = JSON.parse(bodyTemplate);
                               //  console.log(templateJson);
@@ -298,7 +204,9 @@ module.exports = function (io) {
                                     };
                                    // console.log(sendEmail);
                                     var token = "?api_token="+data.token;
-                                    url = "http://world.conektta.info/api/envios/enviarCampanha" + token;
+                                    pathname = 'envios/enviarCampanha';
+                                    url = config.word_url + pathname + token;
+                                    //url = "http://world.conektta.info/api/envios/enviarCampanha" + token;
                                     request({
                                         uri: url,
                                         method: "POST",
@@ -313,11 +221,14 @@ module.exports = function (io) {
                                                 mensage: errorTemplate
                                             });
                                         }
-
+                                        console.log(">>>> 3 <<<<");
+                                        console.log(responseSendEmail.body);
                                         try{
                                             if(responseSendEmail.body === "Sucesso"){
                                                 var token = "?api_token="+data.token;
-                                                url = "http://world.conektta.info/api/credits/add" + token;
+                                                pathname = 'credits/add';
+                                                url = config.word_url + pathname + token;
+                                               // url = "http://world.conektta.info/api/credits/add" + token;
 
                                                 request({
                                                     uri: url,
@@ -333,13 +244,17 @@ module.exports = function (io) {
                                                             mensage: "Erro ao enviar email"
                                                         });
                                                     }
+                                                    console.log(">>>> 4 <<<<");
+                                                    console.log(bodyCredits);
                                                     if (bodyCredits == "Dados inseridos com sucess") {
 
                                                         var dataCreditsAds = {
                                                             idUsuer :operation.id_usuario,
                                                             token : data.token
                                                         };
-                                                        updateCreditsEmail(operation.id_usuario, function (response) {
+                                                        updateCredits(operation.id_usuario, function (response) {
+                                                            console.log(">>>> 5 <<<<");
+                                                            console.log(response);
                                                             if (response.status) {
                                                                 callback({
                                                                     success: true,
@@ -411,85 +326,11 @@ module.exports = function (io) {
 
         });
 
-
-
-
-        /*socket.on('send:sendEmail', function (data, callback) {
-
-         var operation = data.operation[0];
-         var create = data.create[0];
-         var credits = data.credits;
-         var email = data.email[0];
-         var jsonReturn = {};
-
-         if (create.Message.cost < credits) {
-         var url = "http://world.conektta.info/api/campanhas/add";
-         request({
-         uri: url,
-         method: "POST",
-         headers: {
-         "content-type": "application/json"
-         },
-         form: create
-         }, function (error, response, body) {
-         if (error) {
-         console.log(error);
-         callback(error);
-         }
-         if (body === "Campanha gravada com sucesso") {
-         // Envia campanha
-
-         ses.sendEmail(email, function (err, data) {
-         if (err) {
-         console.log(err);
-         callback(err);
-         } else {
-         console.log(data);
-         // Debita credito
-         var url = "http://world.conektta.info/api/credits/add";
-         request({
-         uri: url,
-         method: "POST",
-         form: operation
-         }, function (error, response, body) {
-         if (error) {
-         callback(error);
-         }
-         if (body == "Dados inseridos com sucess") {
-
-         // Atualiza credito
-         updateCreditsEmail(operation.id_usuario, function (response) {
-            console.log(response);
-             if (response.status) {
-                callback(response.status);
-            }
-         })
-         } else {
-         callback("Ero ao enviar email");
-         }
-
-
-         })
-         }
-         });
-
-         } else {
-         callback({
-         success: false,
-         mensage: "Errro ao gravar campanha"
-         });
-         }
-         })
-
-         } else {
-         callback();
-         }
-         });*/
-
-
         socket.on('send:balanceEmail', function (data) {
             var token = "?api_token="+data.token;
-            var url = "http://world.conektta.info/api/credits/" + data.id + "/email" + token;
+            pathname = 'credits/';
+            var url = config.word_url + pathname + data.id + "/email" + token;
+            //var url = "http://world.conektta.info/api/credits/" + data.id + "/email" + token;
             request = require("request");
             request({
                 uri: url,
@@ -512,24 +353,24 @@ module.exports = function (io) {
                     socket.emit('send:errorBalanceEmail', err, data);
                 }
 
-                // socket.emit('send:sucessBalanceEmail',response.body);
-                // var jsonres = JSON.parse(response.body);
-                // res.json(response.body);
             })
         });
 
         var updateCredits = function (data, callback) {
-
+            console.log(">>>updateCredits<<<");
             var idUser = data.idUsuer;
             var token = "?api_token="+data.token;
+            pathname = 'credits/';
+            var url = config.word_url + pathname + idUser + "/email" + token;
 
-            var url = "http://world.conektta.info/api/credits/" + idUser + "/email" + token;
+            //var url = "http://world.conektta.info/api/credits/" + idUser + "/email" + token;
             //console.log(url);
             request = require("request");
             request({
                 uri: url,
                 method: "GET"
             }, function (error, response, body) {
+                console.log(">>> 1 -- updateCredits<<<");
                 console.log(response.body);
                 if (error) {
                     socket.broadcast.emit('send:errorBalanceEmail', error, idUser);
@@ -563,82 +404,10 @@ module.exports = function (io) {
             })
         };
 
-        var updateCreditsEmail = function (idUser, callback) {
-            var token = "?api_token="+data.token;
-            var url = "http://world.conektta.info/api/credits/" + idUser + "/email" + token;
-            //console.log(url);
-            request = require("request");
-            request({
-                uri: url,
-                method: "GET"
-            }, function (error, response, body) {
-                console.log(response.body);
-                if (error) {
-                    socket.broadcast.emit('send:errorBalanceEmail', error, idUser);
-                    var returnJson = {
-                        status: false,
-                        returnObj: error
-                    };
-                    callback(returnJson);
-                    //return returnJson;
-                }
-                if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
-                    response.body == '"parametro invalido"') {
-                    socket.emit('send:errorBalanceEmail', response.body, idUser);
-                    var returnJson = {
-                        status: false,
-                        returnObj: response.body
-                    };
-                    callback(returnJson);
-
-                } else {
-                    socket.broadcast.emit('send:sucessBalanceEmail', response.body, idUser);
-
-
-                    var returnJson = {
-                        status: true,
-                        returnObj: response.body
-                    };
-                    callback(returnJson);
-                }
-
-            })
-        };
 
 
         /////////// ADS /////////
 
-        socket.on('send:balanceAds', function (data) {
-            console.log(data);
-            // var id_usuario = req.param('idUsuario');
-            var token = "?api_token="+data.token;
-            var url = "http://world.conektta.info/api/credits/" + data.id + "/adds" + token;
-            console.log(url);
-            request = require("request");
-            request({
-                uri: url,
-                method: "GET"
-            }, function (error, response, body) {
-                if (error) {
-                    socket.broadcast.emit('send:errorBalanceAds', error, data.id);
-                }
-                try{
-                    if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
-                        response.body == '"parametro invalido"') {
-                        // console.log(">>>ERROR")
-                        socket.emit('send:errorBalanceAds', response.body, data.id);
-
-                    } else {
-                        // console.log(response.body);
-                        socket.emit('send:sucessBalanceAds', response.body, data.id);
-                    }
-                }catch (err){
-                    socket.emit('send:errorBalanceAds', err, data);
-                }
-
-
-            })
-        });
 
         /////// ADS
 
@@ -646,9 +415,8 @@ module.exports = function (io) {
             var file = data.adbutler.fileBanner;
             if(data.typeBanner === 'imageBanner'){
                 imageBanner(data.adbutler, function (imageBannerRes) {
-
                     if(imageBannerRes.adbutlerRes){
-
+                        data.zoho.id_Adbutler = imageBannerRes.campaignID;
                         insertRecords(data.zoho, function (insertRecordsRes) {
 
                             if(insertRecordsRes.insertRecordsRes){
@@ -657,7 +425,6 @@ module.exports = function (io) {
                                     token : data.token
                                 };
                                 debitCredit(dataDebit,function (debitCreditRes) {
-                                    console.log(debitCreditRes);
                                     if(debitCreditRes.debitCreditRes){
                                         var dataCreditsAds = {
                                             idUsuer :data.idUsuer,
@@ -710,7 +477,6 @@ module.exports = function (io) {
                                     token : data.token
                                 };
                                 debitCredit(dataDebit,function (debitCreditRes) {
-                                    console.log(debitCreditRes);
                                     if(debitCreditRes.debitCreditRes){
                                         var dataCreditsAds = {
                                             idUsuer :data.idUsuer,
@@ -773,7 +539,6 @@ module.exports = function (io) {
                     "creative": creativeImage.id
                 }).then(function (bannerImages) {
                     // Creating a banner campaign
-                    console.log(bannerImages);
                     adbutler.campaigns.banners.create({
                         "advertiser": adbutlerJson.advertiserID,
                         "height": 250,
@@ -781,7 +546,6 @@ module.exports = function (io) {
                         "width": 300
                     }).then(function (bannerCampaign) {
                         // Assigning banner to the campaign
-                        console.log(bannerCampaign);
                         adbutler.campaignAssignments.create({
                             "campaign": bannerCampaign.id,
                             "advertisement": {
@@ -798,25 +562,19 @@ module.exports = function (io) {
                                 }
                             });
                             /////// Success
-                            callback({adbutlerRes:true});
+                            callback({adbutlerRes:true, campaignID:bannerCampaign.id});
 
                         });
                     }).catch(function (bannerCampaignError) {
-                        console.log("bannerCampaignError");
-                        console.log(bannerCampaignError);
                         callback({adbutlerRes:false,error:bannerCampaignError});
                        // res.json({success: false, reponse: bannerCampaignError});
 
                     });
                 }).catch(function (bannerImagesError) {
-                    console.log("bannerImagesError");
-                    console.log(bannerImagesError);
                     callback({adbutlerRes:false,error:bannerImagesError});
                    // res.json({success: false, reponse: bannerImagesError});
                 });
             }).catch(function (creativeImageError) {
-                console.log("creativeImageError");
-                console.log(creativeImageError);
                 callback({adbutlerRes:false,error:creativeImageError});
                 //res.json({success: false, reponse: creativeImageError});
             });
@@ -841,7 +599,6 @@ module.exports = function (io) {
                     "creative": creativeRichMedia.id
                 }).then(function (bannerRichMedia) {
                     // Creating a banner campaign
-                    console.log(bannerRichMedia);
                     adbutler.campaigns.banners.create({
                         "advertiser": adbutlerJson.advertiserID,
                         "height": 250,
@@ -849,7 +606,6 @@ module.exports = function (io) {
                         "width": 300
                     }).then(function (bannerCampaign) {
                         // Assigning banner to the campaign
-                        console.log(bannerCampaign);
                         adbutler.campaignAssignments.create({
                             "campaign": bannerCampaign.id,
                             "advertisement": {
@@ -886,8 +642,6 @@ module.exports = function (io) {
 
 
         var insertRecords = function (zohoJson,callback) {
-            console.log("insertRecords");
-            console.log(zohoJson);
             var xml = "";
             if (zohoJson.zonas) {
                 xml = "<CustomModule2>" +
@@ -911,8 +665,10 @@ module.exports = function (io) {
                     "</row>" +
                     "</CustomModule2>"
             }
-            var url = "https://crm.zoho.com/crm/private/json/CustomModule2/insertRecords?authtoken=" + zohoToken +
-                "&scope=crmapi&newFormat=1&xmlData=" + xml;
+            var url = config.zoho_url + zohoToken + "&scope=crmapi&newFormat=1&xmlData=" + xml;
+
+           /*var url = "https://crm.zoho.com/crm/private/json/CustomModule2/insertRecords?authtoken=" + zohoToken +
+                "&scope=crmapi&newFormat=1&xmlData=" + xml;*/
 
             request({
                 uri: url,
@@ -927,7 +683,6 @@ module.exports = function (io) {
                     callback({insertRecordsRes:false,error:error});
                     //res.json({success: false, reponse: error}) ;
                 }
-                console.log(body);
                 callback({insertRecordsRes:true})
             });
 
@@ -935,9 +690,10 @@ module.exports = function (io) {
 
         var debitCredit = function (data, callback) {
             var operation = data.operation;
-            console.log(data);
             var token = "?api_token="+data.token;
-            var url = "http://world.conektta.info/api/credits/add" + token;
+            pathname = 'credits/add';
+            var url = config.word_url + pathname + token;
+            //var url = "http://world.conektta.info/api/credits/add" + token;
             request({
                 uri: url,
                 method: "POST",
@@ -961,56 +717,6 @@ module.exports = function (io) {
 
             });
         };
-
-        var updateCreditsAds = function (data, callback) {
-            var idUser = data.idUsuer;
-            var token = "?api_token="+data.token;
-            var url = "http://world.conektta.info/api/credits/" + idUser + "/adds" + token;
-            console.log(url);
-            request = require("request");
-            request({
-                uri: url,
-                method: "GET"
-            }, function (error, response, body) {
-                if (error) {
-                    socket.broadcast.emit('send:errorBalanceAds', error, idUser);
-                    var returnJson = {
-                        status: false,
-                        returnObj: error
-                    };
-                    callback(returnJson);
-                    //return returnJson;
-                }
-                console.log(response.body);
-                if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
-                    response.body == '"parametro invalido"') {
-                    socket.emit('send:errorBalanceAds', response.body, idUser);
-                    var returnJson = {
-                        status: false,
-                        returnObj: response.body
-                    };
-                    callback(returnJson);
-
-                } else {
-                    try {
-                        socket.emit('send:sucessBalanceAds', response.body, idUser);
-                        socket.broadcast.emit('send:sucessBalanceAds', response.body, idUser);
-                        var returnJson = {
-                            status: true,
-                            returnObj: response.body
-                        };
-                        callback(returnJson);
-                    }catch (err){
-                        console.log(err);
-                        socket.emit('send:errorBalanceAds', err, idUser);
-                    }
-
-
-                }
-
-            })
-        };
-
 
     });
 

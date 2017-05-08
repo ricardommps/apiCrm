@@ -122,7 +122,6 @@ apiRoutes.post('/teste' , function(req, res){
 });
 
 app.get("/", function (req, res) {
-    console.log(">>>>>>>>aki");
 });
 
 

@@ -3,14 +3,18 @@ var request = require("request");
 var async = require('async');
 var unique = require('array-unique');
 var router = express.Router();
+var config = require('../config.json');
+var pathname = 'consultas/ads/';
 
 
 
 router.get('/listsUsers', function(req, res, next) {
     var token = "?api_token="+global.token;
     var idUser = req.query.idUser;
-    var url = "http://world.conektta.info/api/contatos/getContatos/"+idUser+token;
-    console.log(url);
+    pathname = 'contatos/getContatos/';
+    var url = config.word_url + pathname + idUser + token;
+    //var url = "http://world.conektta.info/api/contatos/getContatos/"+idUser+token;
+
     request({
         uri: url,
         method: "GET"
@@ -29,7 +33,9 @@ router.get('/listsUsers', function(req, res, next) {
 router.get('/listsLastUsers', function(req, res, next) {
     var token = "?api_token="+global.token;
     var idUser = req.query.idUser;
-    var url = "http://world.conektta.info/api/contatos/getconectados/"+idUser+token;
+    pathname = 'contatos/getconectados/';
+    var url = config.word_url + pathname + idUser + token;
+    //var url = "http://world.conektta.info/api/contatos/getconectados/"+idUser+token;
     console.log(url);
     request({
         uri: url,
@@ -56,8 +62,10 @@ router.get('/listsLastUsers', function(req, res, next) {
 router.get('/listCampaignsEmail', function(req, res, next){
     var token = "&api_token="+global.token;
     var idUser = req.query.idUser
-    var url = "http://world.conektta.info/api/campanhas?where[id_dono_campanha]="+idUser+token;
-    console.log(url);
+    pathname = 'campanhas?where[id_dono_campanha]=';
+    var url = config.word_url + pathname + idUser + token;
+    //var url = "http://world.conektta.info/api/campanhas?where[id_dono_campanha]="+idUser+token;
+
     request({
         uri: url,
         method: "GET"
@@ -81,8 +89,10 @@ router.get('/listCampaignsEmail', function(req, res, next){
 
 router.get('/listCampaignsSms', function(req, res, next) {
     var token = "&api_token="+global.token;
-    var idUser = req.query.idUser
-    var url = "http://world.conektta.info/api/sms?where[id_dono_campanha]=" + idUser+token;
+    var idUser = req.query.idUser;
+    pathname = 'sms?where[id_dono_campanha]=';
+    var url = config.word_url + pathname + idUser + token;
+    //var url = "http://world.conektta.info/api/sms?where[id_dono_campanha]=" + idUser+token;
     console.log(url);
     request({
         uri: url,

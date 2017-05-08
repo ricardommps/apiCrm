@@ -1,0 +1,6 @@
+{
+  "word_url"          : "http://world.conektta.info/api/",
+  "elasticemail_url"  : "https://api.elasticemail.com/template/add?version=2",
+  "zoho_url"          :"https://crm.zoho.com/crm/private/json/CustomModule2/insertRecords?authtoken=",
+  "viacep_url"        :"https://viacep.com.br/ws/"
+}

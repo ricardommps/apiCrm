@@ -1,14 +1,20 @@
 var express = require('express');
 var request = require("request");
 var router = express.Router();
+var config = require('../config.json');
+var pathname = '';
 
 /* GET home page. */
 
 router.post('/all', function(req, res, next) {
     var token = "?api_token="+global.token;
-    var url = "http://world.conektta.info/api/relatorios/dashboard/" +
+    pathname = 'relatorios/dashboard/';
+    var url = config.word_url + pathname +
         req.body.id_CRM + "/" + req.body.mes + "/" + req.body.ano +
         "/" + req.body.id_pa +"/" + token;
+    /*var url = "http://world.conektta.info/api/relatorios/dashboard/" +
+        req.body.id_CRM + "/" + req.body.mes + "/" + req.body.ano +
+        "/" + req.body.id_pa +"/" + token;*/
     console.log(url);
     request({
         uri: url,
@@ -33,7 +39,9 @@ router.post('/all', function(req, res, next) {
 router.get('/listPas', function(req, res, next) {
     var token = "?api_token="+global.token;
     var idUser = req.query.idUser;
-    var url = "http://world.conektta.info/api/relatorios/pas/"+idUser + token;
+    pathname = 'relatorios/pas/';
+    var url = config.word_url + pathname + idUser + token;
+   // var url = "http://world.conektta.info/api/relatorios/pas/"+idUser + token;
     request({
         uri: url,
         method: "GET"

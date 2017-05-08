@@ -3,13 +3,18 @@ var request = require("request");
 var async = require('async');
 var unique = require('array-unique');
 var router = express.Router();
+var config = require('../config.json');
+var pathname = '';
 
 router.get('/perfilUsuario', function(req, res, next) {
     var token = "?api_token="+global.token;
     var id_user = req.query.id_user;
     var id_contact = req.query.id_contact;
-    var url = "http://world.conektta.info/api/estatisticas/perfilUsuario/" +
-        id_user + "/" +id_contact+"/" + token;
+    pathname = 'estatisticas/perfilUsuario/';
+    var url = config.word_url + pathname + id_user + "/" +id_contact+"/" + token;
+
+    /*var url = "http://world.conektta.info/api/estatisticas/perfilUsuario/" +
+        id_user + "/" +id_contact+"/" + token;*/
     console.log(req.query);
     request({
         uri: url,
@@ -32,9 +37,10 @@ router.get('/perfilUsuario', function(req, res, next) {
 router.get('/mapaestabelecimentos', function(req, res, next) {
     var token = "?api_token="+global.token;
     var id_user = req.query.id_user;
-    var url = "http://world.conektta.info/api/estatisticas/mapaestabelecimentos/" +
-        id_user + token;
-    console.log(url);
+    pathname = 'estatisticas/mapaestabelecimentos/';
+    var url = config.word_url + pathname + id_user + token;
+    /*var url = "http://world.conektta.info/api/estatisticas/mapaestabelecimentos/" +
+        id_user + token;*/
     request({
         uri: url,
         method: "GET"

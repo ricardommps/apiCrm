@@ -4,31 +4,16 @@ var jwt = require('jsonwebtoken');
 var router = express.Router();
 
 var crypto = require('crypto');
+var config = require('../config.json');
+var pathname = '';
 
 
 
 router.post('/consultasUsers', function(req, res, next) {
-    var url = "http://world.conektta.info/api/consultas/users";
-    console.log(req.body);
+    pathname = 'consultas/users';
+    var url = config.word_url + pathname;
+   // var url = "http://world.conektta.info/api/consultas/users";
     res.send('respond with a resource');
-  /*  request({
-        uri: url,
-        method: "POST",
-        form:req.body
-    }, function(error, response, body) {
-
-        if (error) {
-            res.send(error);
-            return;
-        }
-        try{
-            res.json({ success: true, reponse: body });
-        }catch (err){
-            res.send(err);
-            return;
-        }
-
-    })*/
 });
 
 router.get('/', function(req, res, next) {
@@ -36,9 +21,9 @@ router.get('/', function(req, res, next) {
         username: req.param('username'),
         password: crypto.createHash('md5').update(req.param('password')).digest("hex")
     } ;
-
-    console.log(user);
-    var url = "http://world.conektta.info/api/usuarios?login=" + user.username + "," +user.password+"&api_token=1";
+    pathname = 'usuarios?login=';
+    var url = config.word_url + pathname + user.username + "," + user.password + "&api_token=1";
+    //var url = "http://world.conektta.info/api/usuarios?login=" + user.username + "," +user.password+"&api_token=1";
     request({
         uri: url,
         method: "GET"
@@ -47,7 +32,6 @@ router.get('/', function(req, res, next) {
             res.send(error);
             return;
         }
-        console.log(response.body);
         try{
             var jsonres = JSON.parse(response.body);
 

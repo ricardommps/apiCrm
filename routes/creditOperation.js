@@ -1,10 +1,14 @@
 var express = require('express');
 var router = express.Router();
+var config = require('../config.json');
+var pathname = '';
 
 /* GET home page. */
 router.post('/postDebit', function(req, res, next) {
     var token = "?api_token="+global.token;
-    var url = "http://world.conektta.info/api/credits/add"+token;
+    pathname = 'credits/add';
+    var url = config.word_url + pathname  + token;
+    //var url = "http://world.conektta.info/api/credits/add"+token;
     request({
         uri: url,
         method: "POST",

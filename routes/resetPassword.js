@@ -4,9 +4,13 @@ var jwt = require('jsonwebtoken');
 var router = express.Router();
 
 var crypto = require('crypto');
+var config = require('../config.json');
+var pathname = '';
 
 router.post('/consultasUsers', function (req, res, next) {
-    var url = "http://world.conektta.info/api/consultas/users";
+    pathname = 'consultas/users';
+    var url = config.word_url + pathname;
+   // var url = "http://world.conektta.info/api/consultas/users";
     request({
         uri: url,
         method: "POST",
@@ -32,7 +36,9 @@ router.post('/consultasUsers', function (req, res, next) {
 });
 
 router.post('/sendCode', function (req, res, next) {
-    var url = "http://world.conektta.info/api/consultas/envio";
+    pathname = 'consultas/envio';
+    var url = config.word_url + pathname;
+   // var url = "http://world.conektta.info/api/consultas/envio";
     request({
         uri: url,
         method: "POST",
@@ -43,7 +49,6 @@ router.post('/sendCode', function (req, res, next) {
             res.send(error);
             return;
         }
-        console.log(body);
         if(body == 'Codigo Enviado para o email'){
             res.json({success: true, response:body});
         }else{
@@ -54,7 +59,9 @@ router.post('/sendCode', function (req, res, next) {
 
 
 router.post('/codeValidation', function (req, res, next) {
-    var url = "http://world.conektta.info/api/consultas/codigo";
+    pathname = 'consultas/codigo';
+    var url = config.word_url + pathname;
+   // var url = "http://world.conektta.info/api/consultas/codigo";
     request({
         uri: url,
         method: "POST",
@@ -65,7 +72,6 @@ router.post('/codeValidation', function (req, res, next) {
             res.send(error);
             return;
         }
-        console.log(body);
         if(body == 'Codigo valido'){
             res.json({success: true, response:body});
         }else{
@@ -78,12 +84,13 @@ router.post('/updateSenha', function (req, res, next) {
 
     var dataUpdateSenha = {
         id_usuario: req.body.id_usuario,
-        password: crypto.createHash('md5').update(req.body.password).digest("hex")
+        password: req.body.password
     } ;
 
-    console.log(dataUpdateSenha);
+    pathname = 'consultas/updateSenha';
+    var url = config.word_url + pathname;
 
-    var url = "http://world.conektta.info/api/consultas/updateSenha";
+   // var url = "http://world.conektta.info/api/consultas/updateSenha";
     request({
         uri: url,
         method: "POST",

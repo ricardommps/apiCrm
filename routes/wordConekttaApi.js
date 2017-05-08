@@ -1,11 +1,15 @@
 var express = require('express');
 var request = require("request");
 var router = express.Router();
+var config = require('../config.json');
+var pathname = '';
 
 /* GET home page. */
 router.get('/users', function(req, res, next) {
     var token = "?api_token="+global.token;
-    var url = "http://world.conektta.info/api/usuarios?cnkta" + token;
+    pathname = 'usuarios?cnkta';
+    var url = config.word_url + pathname + token;
+    //var url = "http://world.conektta.info/api/usuarios?cnkta" + token;
     request({
         uri: url,
         method: "GET",
@@ -31,7 +35,9 @@ router.get('/balance', function(req, res, next) {
     var token = "?api_token="+global.token;
     var tp_credito = req.param('tpCredito');
     var id_usuario = req.param('idUsuario');
-    var url = "http://world.conektta.info/api/credits/"+id_usuario+"/"+tp_credito + token;
+    pathname = 'credits/';
+    var url = config.word_url + pathname + id_usuario + "/" + tp_credito + token;
+    //var url = "http://world.conektta.info/api/credits/"+id_usuario+"/"+tp_credito + token;
     request({
         uri: url,
         method: "GET"
@@ -54,7 +60,9 @@ router.get('/balance', function(req, res, next) {
 
 router.post('/postDebit', function(req, res, next) {
     var token = "?api_token="+global.token;
-    var url = "http://world.conektta.info/api/credits/add" + token;
+    pathname = 'credits/add';
+    var url = config.word_url + pathname + token;
+    //var url = "http://world.conektta.info/api/credits/add" + token;
     request({
         uri: url,
         method: "POST",

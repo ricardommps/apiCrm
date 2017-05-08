@@ -3,14 +3,18 @@ var request = require("request");
 var async = require('async');
 var unique = require('array-unique');
 var router = express.Router();
+var config = require('../config.json');
+var pathname = '';
 
 
 
 router.get('/lists', function(req, res, next) {
     var token = "?api_token="+global.token;
-    var idUser = req.query.idUser
-    console.log(idUser);
-    var url = "http://world.conektta.info/api/contatos/getListasSms/"+idUser + token;
+    var idUser = req.query.idUser;
+    pathname = 'contatos/getListasSms/';
+    var url = config.word_url + pathname + idUser + token;
+
+   // var url = "http://world.conektta.info/api/contatos/getListasSms/"+idUser + token;
     request({
         uri: url,
         method: "GET"
@@ -32,9 +36,10 @@ router.get('/lists', function(req, res, next) {
 
 router.post('/createLists', function(req, res, next) {
     var token = "?api_token="+global.token;
-    var url = "http://world.conektta.info/api/contatos/addlistsms" + token;
+    pathname = 'contatos/addlistsms';
+    var url = config.word_url + pathname + token;
+    //var url = "http://world.conektta.info/api/contatos/addlistsms" + token;
 
-    console.log(req.body);
     request({
         uri: url,
         method: "POST",
@@ -60,8 +65,10 @@ router.post('/createLists', function(req, res, next) {
 
 router.get('/contacts', function(req, res, next) {
     var token = "?api_token="+global.token;
-    var idUser = req.query.idUser
-    var url = "http://world.conektta.info/api/contatos/getContatosSms/"+ idUser + token;
+    var idUser = req.query.idUser;
+    pathname = 'contatos/getContatosSms/';
+    var url = config.word_url + pathname + idUser + token;
+    //var url = "http://world.conektta.info/api/contatos/getContatosSms/"+ idUser + token;
     request({
         uri: url,
         method: "GET"
@@ -82,8 +89,11 @@ router.get('/contacts', function(req, res, next) {
 
 router.post('/contactsToList', function(req, res, next) {
     var token = "&api_token="+global.token;
-    var url = "http://world.conektta.info/api/contatos/getContatosListasSms?arr_listas="+
-        req.body + token;
+    pathname = 'contatos/getContatosListasSms?arr_listas=';
+    var url = config.word_url + pathname + req.body  + token;
+
+   /* var url = "http://world.conektta.info/api/contatos/getContatosListasSms?arr_listas="+
+        req.body + token;*/
     request({
         uri: url,
         method: "GET"
@@ -118,7 +128,9 @@ router.post('/contactsToList', function(req, res, next) {
 
 router.post('/campaigns', function(req, res, next){
     var token = "?api_token="+global.token;
-    var url = "http://world.conektta.info/api/sms/add" + token;
+    pathname = 'sms/add';
+    var url = config.word_url + pathname + token;
+    //var url = "http://world.conektta.info/api/sms/add" + token;
     request({
         uri: url,
         method: "POST",
@@ -145,9 +157,11 @@ router.post('/campaigns', function(req, res, next){
 
 router.get('/campaigns', function(req, res, next) {
     var token = "&api_token="+global.token;
-    var idUser = req.query.idUser
-    var url = "http://world.conektta.info/api/sms?where[id_dono_campanha]=" +
-        idUser + token;
+    var idUser = req.query.idUser;
+    pathname = 'sms?where[id_dono_campanha]=';
+    var url = config.word_url + pathname + idUser + token;
+    /*var url = "http://world.conektta.info/api/sms?where[id_dono_campanha]=" +
+        idUser + token;*/
     request({
         uri: url,
         method: "GET"
