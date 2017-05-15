@@ -40,6 +40,7 @@
     "striptags": "^3.0.1",
     "supertest": "~1.1.0",
     "uniq": "^1.0.1",
+    "woocommerce-api": "^1.4.2",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {

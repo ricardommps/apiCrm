@@ -26,6 +26,7 @@ var ads                     = require('./routes/ads');
 var estatisticas            = require('./routes/estatisticas');
 var uploadBanner            = require('./routes/uploadBanner');
 var resetPassword           = require('./routes/resetPassword');
+var orders                  = require('./routes/orders');
 //var teste = require('./routes/teste');
 
 
@@ -78,6 +79,7 @@ app.use('/api/ads',ads);
 app.use('/api/estatisticas',estatisticas);
 app.use('/api/uploadBanner',uploadBanner);
 app.use('/api/resetPassword',resetPassword);
+app.use('/api/orders',orders);
 
 app.use('/api', apiRoutes);
 
