@@ -13,9 +13,6 @@ router.get('/perfilUsuario', function(req, res, next) {
     pathname = 'estatisticas/perfilUsuario/';
     var url = config.word_url + pathname + id_user + "/" +id_contact+"/" + token;
 
-    /*var url = "http://world.conektta.info/api/estatisticas/perfilUsuario/" +
-        id_user + "/" +id_contact+"/" + token;*/
-    console.log(req.query);
     request({
         uri: url,
         method: "GET"
@@ -38,9 +35,12 @@ router.get('/mapaestabelecimentos', function(req, res, next) {
     var token = "?api_token="+global.token;
     var id_user = req.query.id_user;
     pathname = 'estatisticas/mapaestabelecimentos/';
-    var url = config.word_url + pathname + id_user + token;
-    /*var url = "http://world.conektta.info/api/estatisticas/mapaestabelecimentos/" +
-        id_user + token;*/
+    if(req.query.pasId || req.query.pasId.length > 0){
+        var url = config.word_url + pathname + id_user + "/" +  req.query.pasId + "/" +  token;
+    }else{
+        var url = config.word_url + pathname + id_user + token;
+    }
+
     request({
         uri: url,
         method: "GET"

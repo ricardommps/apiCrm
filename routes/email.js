@@ -65,7 +65,14 @@ router.get('/contacts', function(req, res, next) {
     var token = "?api_token="+global.token;
     var idUser = req.query.idUser;
     pathname = 'contatos/getContatos/';
-    var url = config.word_url + pathname + idUser + token;
+    if(req.query.pasId || req.query.pasId.length > 0){
+        var url = config.word_url + pathname + idUser + "/" +  req.query.pasId + "/" +  token;
+    }else{
+        var url = config.word_url + pathname + idUser + token;
+    }
+
+    console.log(url);
+
     //var url = "http://world.conektta.info/api/contatos/getContatos/"+idUser+token;
     request({
         uri: url,

@@ -45,7 +45,6 @@ router.post('/stats', function (req, res, next) {
 
     adbutler.stats.read(settings)
         .then(function (stats) {
-            console.log(stats);
             res.json({success: true, response: stats});
         })
         .catch(function (statsError) {

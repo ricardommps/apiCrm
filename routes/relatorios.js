@@ -9,13 +9,12 @@ var pathname = '';
 router.post('/all', function(req, res, next) {
     var token = "?api_token="+global.token;
     pathname = 'relatorios/dashboard/';
+
+
     var url = config.word_url + pathname +
         req.body.id_CRM + "/" + req.body.mes + "/" + req.body.ano +
-        "/" + req.body.id_pa +"/" + token;
-    /*var url = "http://world.conektta.info/api/relatorios/dashboard/" +
-        req.body.id_CRM + "/" + req.body.mes + "/" + req.body.ano +
-        "/" + req.body.id_pa +"/" + token;*/
-    console.log(url);
+        "/" + req.body.id_pas +"/" + token;
+
     request({
         uri: url,
         method: "GET",
@@ -25,7 +24,6 @@ router.post('/all', function(req, res, next) {
             res.send(error);
             return;
         }
-        console.log(body);
         if(body == 'Nao existem conexoes neste PA'){
             res.json({ success: false, response: body });
         }else{
