@@ -49,7 +49,8 @@ router.post('/sendCode', function (req, res, next) {
             res.send(error);
             return;
         }
-        if(body == 'Codigo Enviado para o email'){
+        console.log(body);
+        if(body == 'Codigo Enviado para o email' || body == 'Codigo Enviado para o celular'){
             res.json({success: true, response:body});
         }else{
             res.json({success: false});

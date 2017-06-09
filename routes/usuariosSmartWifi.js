@@ -9,7 +9,7 @@ var pathname = '';
 
 router.get('/queryZipCod', function(req, res, next) {
     var cep = req.query.cep;
-    var url = viacep_url + cep + "/json/";
+    var url = config.viacep_url + cep + "/json/";
    // var url = "https://viacep.com.br/ws/"+cep+"/json/"
 
     request({
@@ -36,6 +36,7 @@ router.get('/queryLicense', function(req, res, next) {
     var license = req.query.licensa;
     pathname = 'licencas/consulta/';
     var url = config.word_url + pathname + license + token;
+    console.log(url);
    // var url = "http://world.conektta.info/api/licencas/consulta/"+license + token;
     request({
         uri: url,

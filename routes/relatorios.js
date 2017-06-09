@@ -6,14 +6,15 @@ var pathname = '';
 
 /* GET home page. */
 
+
+
 router.post('/all', function(req, res, next) {
     var token = "?api_token="+global.token;
     pathname = 'relatorios/dashboard/';
 
 
     var url = config.word_url + pathname +
-        req.body.id_CRM + "/" + req.body.mes + "/" + req.body.ano +
-        "/" + req.body.id_pas +"/" + token;
+        req.body.id_CRM + "/" + req.body.qtd_dias + "/" + req.body.id_pas +"/" + token;
 
     request({
         uri: url,
@@ -53,6 +54,60 @@ router.get('/listPas', function(req, res, next) {
         }else{
             res.json({ success: true, reponse: body });
         }
+    })
+});
+
+router.get('/listEstabelecimentos', function(req, res, next) {
+    var token = "?api_token="+global.token;
+    var idUser = req.query.idUser;
+    pathname = 'estabelecimentos/listar/';
+    var url = config.word_url + pathname + idUser + token;
+    console.log(url);
+    // var url = "http://world.conektta.info/api/relatorios/pas/"+idUser + token;
+    request({
+        uri: url,
+        method: "GET"
+    }, function(error, response, body) {
+        if (error) {
+            res.send(error);
+            return;
+        }
+
+        try{
+            var jsonBody = JSON.parse(body);
+            res.json({ success: true, response: jsonBody });
+        }catch (err){
+            res.json({ success: false, response: jsonBody });
+        }
+
+
+    })
+});
+
+router.get('/listEstabelecimentos', function(req, res, next) {
+    var token = "?api_token="+global.token;
+    var idUser = req.query.idUser;
+    pathname = 'estabelecimentos/listar/';
+    var url = config.word_url + pathname + idUser + token;
+    console.log(url);
+    // var url = "http://world.conektta.info/api/relatorios/pas/"+idUser + token;
+    request({
+        uri: url,
+        method: "GET"
+    }, function(error, response, body) {
+        if (error) {
+            res.send(error);
+            return;
+        }
+
+        try{
+            var jsonBody = JSON.parse(body);
+            res.json({ success: true, response: jsonBody });
+        }catch (err){
+            res.json({ success: false, response: jsonBody });
+        }
+
+
     })
 });
 

@@ -61,4 +61,76 @@ router.get('/mapaestabelecimentos', function(req, res, next) {
     })
 });
 
+router.get('/ranking', function(req, res, next) {
+    var token = "?api_token="+global.token;
+    var id_user = req.query.idUser;
+    pathname = 'estatisticas/ranking/';
+    if(req.query.pasId || req.query.pasId.length > 0){
+        var url = config.word_url + pathname + id_user + "/" + req.query.dateRange + "/" + req.query.pasId + "/" +  token;
+    }else{
+        var url = config.word_url + pathname + id_user + token;
+    }
+    request({
+        uri: url,
+        method: "GET"
+    }, function(error, response, body) {
+        if (error) {
+            res.send(error);
+            return;
+        }
+        // var jsonres = JSON.parse(response.body);
+        if(response.body == 'Sem dados para sua solicitacao'){
+            res.json({ success: false });
+        }else{
+            try{
+                res.json({ success: true, response: response.body });
+            }catch (err){
+                res.json({ success: false });
+            }
+        }
+
+
+    })
+});
+
+router.get('/average', function(req, res, next) {
+    var token = "?api_token="+global.token;
+    var id_user = req.query.idUser;
+    pathname = 'estatisticas/average/';
+    if(req.query.pasId || req.query.pasId.length > 0){
+        var url = config.word_url + pathname + id_user + "/" + req.query.dateRange + "/" + req.query.pasId + "/" +  token;
+    }else{
+        var url = config.word_url + pathname + id_user + token;
+    }
+    request({
+        uri: url,
+        method: "GET"
+    }, function(error, response, body) {
+        if (error) {
+            res.send(error);
+            return;
+        }
+        if(response.statusCode == 500){
+            res.json({ success: false });
+            return;
+        }
+
+        if(response.statusCode == 200){
+            if(response.body == 'Sem dados para sua solicitacao'){
+                res.json({ success: false });
+                return;
+            }else{
+                try{
+                    res.json({ success: true, response: response.body });
+                    return;
+                }catch (err){
+                    res.json({ success: false });
+                    return;
+                }
+            }
+        }
+
+    })
+});
+
 module.exports = router;
