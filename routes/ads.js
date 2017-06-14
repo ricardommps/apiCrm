@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var io = require('../app');
 var request = require("request");
 var AdButler = require("adbutler");
 var async = require('async');
@@ -57,11 +58,10 @@ router.post('/stats', function (req, res, next) {
 
 router.post('/banner', function (req, res, next) {
 
-    var settings = req.body;
-    console.log(">>>>>>");
-    console.log(req.body);
 
-    res.send("ok");
+    res.send("OK");
+
+
 
 
 });

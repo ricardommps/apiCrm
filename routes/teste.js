@@ -5,7 +5,7 @@ var io = require('../app');
 
 
 
-router.post('/', function(req, res, next) {
+/*router.post('/', function(req, res, next) {
 
     io.on('connection', function (socket){
 
@@ -14,18 +14,20 @@ router.post('/', function(req, res, next) {
     res.json(req.body);
 
 
-});
+});*/
 
-router.post('/banner', function(req, res, next) {
+router.post('/', function(req, res, next) {
 
     io.on('connection', function (socket){
 
-        socket.broadcast.emit('send:banner', req.body);
+        socket.broadcast.emit('send:banner', response.body);
     });
     res.json(req.body);
 
 
 });
+
+
 
 module.exports = router;
 
