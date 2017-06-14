@@ -1,5 +1,6 @@
 var express = require('express');
 var request = require("request");
+var merge = require('merge-recursive');
 var async = require('async');
 var unique = require('array-unique');
 var router = express.Router();
@@ -131,6 +132,21 @@ router.get('/average', function(req, res, next) {
         }
 
     })
+});
+
+router.get('/phpUtils', function(req, res, next) {
+    // var token = "&api_token="+global.token;
+    //var arr1 = req.query.idUser;
+    var gender_masculino = req.query.gender_masculino;
+    var gender_feminino = req.query.gender_feminino;
+    var gender_nd = req.query.gender_nd;
+    var teste = merge(
+        { a: 'a', b: 'b' },
+        { b: 'c', c: 'd' }
+    );
+
+    res.send("ok");
+
 });
 
 module.exports = router;

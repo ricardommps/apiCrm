@@ -55,6 +55,17 @@ router.post('/stats', function (req, res, next) {
 
 });
 
+router.post('/banner', function (req, res, next) {
+
+    var settings = req.body;
+    console.log(">>>>>>");
+    console.log(req.body);
+
+    res.send("ok");
+
+
+});
+
 
 
 
