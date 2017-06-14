@@ -16,6 +16,17 @@ router.post('/', function(req, res, next) {
 
 });
 
+router.post('/banner', function(req, res, next) {
+
+    io.on('connection', function (socket){
+
+        socket.broadcast.emit('send:banner', response.body);
+    });
+    res.json(req.body);
+
+
+});
+
 module.exports = router;
 
 
