@@ -20,7 +20,7 @@ router.post('/banner', function(req, res, next) {
 
     io.on('connection', function (socket){
 
-        socket.broadcast.emit('send:banner', response.body);
+        socket.broadcast.emit('send:banner', req.body);
     });
     res.json(req.body);
 
