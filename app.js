@@ -125,6 +125,14 @@ apiRoutes.post('/teste' , function(req, res){
 
 });
 
+apiRoutes.post('/banner' , function(req, res){
+
+    //res.json(req.body);
+    io.sockets.emit('send:banner', req.body);
+    res.json(200, {message: "Message received!"});
+
+});
+
 app.get("/", function (req, res) {
 });
 

@@ -5,8 +5,7 @@ var io = require('../app');
 
 
 
-/*router.post('/', function(req, res, next) {
-
+router.post('/', function(req, res, next) {
     io.on('connection', function (socket){
 
         socket.broadcast.emit('send:teste', response.body);
@@ -14,18 +13,8 @@ var io = require('../app');
     res.json(req.body);
 
 
-});*/
-
-router.post('/', function(req, res, next) {
-
-    io.on('connection', function (socket){
-
-        socket.broadcast.emit('send:banner', response.body);
-    });
-    res.json(req.body);
-
-
 });
+
 
 
 

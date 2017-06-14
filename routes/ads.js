@@ -56,15 +56,6 @@ router.post('/stats', function (req, res, next) {
 
 });
 
-router.post('/banner', function (req, res, next) {
-
-
-    res.send("OK");
-
-
-
-
-});
 
 
 
