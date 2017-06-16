@@ -1,23 +1,23 @@
 var request = require("request");
 var striptags = require('striptags');
 var aws = require("aws-sdk");
+var fs = require('fs');
+var http = require('http');
+var Stream = require('stream').Transform;
+var config = require('../config.json');
+var SMSAPI = require('smsapicom');
+var AdButler = require("adbutler");
+
 aws.config.loadFromPath(__dirname + '/../config-aws-ses.json');
 var ses = new aws.SES();
 var clients = [];
 var rooms = [];
-var AdButler = require("adbutler");
 var adbutler = new AdButler({
     'apiKey': 'ebe604963bdb8e8a5ddfa4794dac2563'
 });
 var zohoToken = "a41d3828cae33450cdd258a46f0e85f6";
-
-var fs = require('fs');
-
-var config = require('../config.json');
 var pathname = '';
-
-var SMSAPI = require('smsapicom'),
-    smsapi = new SMSAPI();
+var smsapi = new SMSAPI();
 smsapi.authentication
     .login('conektta', 'b7d76ae495b90e0b5f7f6f7b7199a389');
 
@@ -42,9 +42,9 @@ module.exports = function (io) {
             var jsonReturn = {};
 
             if (create.Message.cost < credits) {
-                var token = "?api_token="+data.token;
+                var token = "?api_token=" + data.token;
                 pathname = 'sms/add';
-                var url = config.word_url + pathname +  token;
+                var url = config.word_url + pathname + token;
                 //var url = "http://world.conektta.info/api/sms/add" + token;
                 request({
                     uri: url,
@@ -67,9 +67,9 @@ module.exports = function (io) {
                             .execute()
                             .then(function (result) {
                                 if (result.count > 0) {
-                                    var token = "?api_token="+data.token;
+                                    var token = "?api_token=" + data.token;
                                     pathname = 'credits/add';
-                                    var url = config.word_url + pathname  + token;
+                                    var url = config.word_url + pathname + token;
                                     //var url = "http://world.conektta.info/api/credits/add" + token;
                                     request({
                                         uri: url,
@@ -81,13 +81,13 @@ module.exports = function (io) {
                                         }
                                         if (body == "Dados inseridos com sucesso") {
                                             var dataCreditsAds = {
-                                                idUsuer :operation.id_usuario,
-                                                token : data.token
+                                                idUsuer: operation.id_usuario,
+                                                token: data.token
                                             };
 
                                             // Atualiza credito
                                             updateCredits(dataCreditsAds, function (response) {
-                                                console.log(response);
+                                                //console.log(response);
                                                 if (response.status) {
                                                     callback(response.status);
                                                 }
@@ -98,13 +98,13 @@ module.exports = function (io) {
                                     });
 
                                 } else {
-                                    console.log("error");
-                                    console.log(result);
+                                    //console.log("error");
+                                    //console.log(result);
                                 }
 
                             })
                             .catch(function (err) {
-                                console.log(err.error);
+                               // console.log(err.error);
                                 callback({
                                     success: false,
                                     mensage: "Errro ao gravar campanha"
@@ -151,10 +151,10 @@ module.exports = function (io) {
             if (create.Message.cost <= credits) {
 
                 //// Salvar campanha
-                var token = "?api_token="+data.token;
+                var token = "?api_token=" + data.token;
                 pathname = 'campanhas/add';
-                var url = config.word_url + pathname  + token;
-               // var url = "http://world.conektta.info/api/campanhas/add" + token;
+                var url = config.word_url + pathname + token;
+                // var url = "http://world.conektta.info/api/campanhas/add" + token;
 
                 request({
                     uri: url,
@@ -164,17 +164,17 @@ module.exports = function (io) {
                     },
                     form: create
                 }, function (error, response, body) {
-                    console.log(error);
+                    //console.log(error);
                     if (error) {
                         callback({
                             success: false,
                             mensage: error
                         });
                     }
-                    console.log(">>>> 1 <<<<");
-                    console.log(response.body);
-                    try{
-                        var campanha  = JSON.parse(response.body);
+                    //console.log(">>>> 1 <<<<");
+                    //console.log(response.body);
+                    try {
+                        var campanha = JSON.parse(response.body);
 
                         //url = "https://api.elasticemail.com/template/add?version=2";
                         url = config.elasticemail_url;
@@ -186,24 +186,24 @@ module.exports = function (io) {
                             },
                             form: template
                         }, function (errorTemplate, responseTemplate, bodyTemplate) {
-                            if(errorTemplate){
+                            if (errorTemplate) {
                                 callback({
                                     success: false,
                                     mensage: errorTemplate
                                 });
                             }
-                            console.log(">>>> 2 <<<<");
-                            console.log(bodyTemplate);
-                            try{
+                          //  console.log(">>>> 2 <<<<");
+                            //console.log(bodyTemplate);
+                            try {
                                 var templateJson = JSON.parse(bodyTemplate);
-                              //  console.log(templateJson);
-                                if(templateJson.success){
+                                //  console.log(templateJson);
+                                if (templateJson.success) {
                                     var sendEmail = {
-                                        id_campanha :campanha.id,
-                                        id_template  : templateJson.data
+                                        id_campanha: campanha.id,
+                                        id_template: templateJson.data
                                     };
-                                   // console.log(sendEmail);
-                                    var token = "?api_token="+data.token;
+                                    // console.log(sendEmail);
+                                    var token = "?api_token=" + data.token;
                                     pathname = 'envios/enviarCampanha';
                                     url = config.word_url + pathname + token;
                                     //url = "http://world.conektta.info/api/envios/enviarCampanha" + token;
@@ -215,20 +215,20 @@ module.exports = function (io) {
                                         },
                                         form: sendEmail
                                     }, function (errorSendEmail, responseSendEmail, bodySendEmail) {
-                                        if(errorSendEmail){
+                                        if (errorSendEmail) {
                                             callback({
                                                 success: false,
                                                 mensage: errorTemplate
                                             });
                                         }
-                                        console.log(">>>> 3 <<<<");
-                                        console.log(responseSendEmail.body);
-                                        try{
-                                            if(responseSendEmail.body === "Sucesso"){
-                                                var token = "?api_token="+data.token;
+                                       // console.log(">>>> 3 <<<<");
+                                       // console.log(responseSendEmail.body);
+                                        try {
+                                            if (responseSendEmail.body === "Sucesso") {
+                                                var token = "?api_token=" + data.token;
                                                 pathname = 'credits/add';
                                                 url = config.word_url + pathname + token;
-                                               // url = "http://world.conektta.info/api/credits/add" + token;
+                                                // url = "http://world.conektta.info/api/credits/add" + token;
 
                                                 request({
                                                     uri: url,
@@ -236,32 +236,32 @@ module.exports = function (io) {
                                                     headers: {
                                                         "content-type": "application/json"
                                                     },
-                                                    form:operation
-                                                }, function(errorCredits, responseCredits, bodyCredits) {
+                                                    form: operation
+                                                }, function (errorCredits, responseCredits, bodyCredits) {
                                                     if (errorCredits) {
                                                         callback({
                                                             success: true,
                                                             mensage: "Erro ao enviar email"
                                                         });
                                                     }
-                                                    console.log(">>>> 4 <<<<");
-                                                    console.log(bodyCredits);
+                                                  //  console.log(">>>> 4 <<<<");
+                                                  //  console.log(bodyCredits);
                                                     if (bodyCredits == "Dados inseridos com sucess") {
 
                                                         var dataCreditsAds = {
-                                                            idUsuer :operation.id_usuario,
-                                                            token : data.token
+                                                            idUsuer: operation.id_usuario,
+                                                            token: data.token
                                                         };
                                                         updateCredits(operation.id_usuario, function (response) {
-                                                            console.log(">>>> 5 <<<<");
-                                                            console.log(response);
+                                                          //  console.log(">>>> 5 <<<<");
+                                                          //  console.log(response);
                                                             if (response.status) {
                                                                 callback({
                                                                     success: true,
                                                                     mensage: response.status
                                                                 });
                                                                 //callback(response.status);
-                                                            }else{
+                                                            } else {
                                                                 callback({
                                                                     success: false,
                                                                     mensage: "Erro ao enviar email"
@@ -269,7 +269,7 @@ module.exports = function (io) {
                                                             }
                                                         });
 
-                                                    }else{
+                                                    } else {
                                                         callback({
                                                             success: false,
                                                             mensage: "Erro ao enviar email"
@@ -278,13 +278,13 @@ module.exports = function (io) {
 
 
                                                 });
-                                            }else {
+                                            } else {
                                                 callback({
                                                     success: false,
                                                     mensage: "Erro ao enviar email"
                                                 });
                                             }
-                                        }catch (er){
+                                        } catch (er) {
                                             callback({
                                                 success: false,
                                                 mensage: "Erro ao enviar email"
@@ -292,14 +292,14 @@ module.exports = function (io) {
                                         }
 
                                     })
-                                }else{
+                                } else {
                                     callback({
                                         success: false,
                                         mensage: "Erro ao enviar email"
                                     });
                                 }
 
-                            }catch (e){
+                            } catch (e) {
                                 callback({
                                     success: false,
                                     mensage: "Erro ao enviar email"
@@ -308,7 +308,7 @@ module.exports = function (io) {
 
                         })
 
-                    }catch (err){
+                    } catch (err) {
                         callback({
                             success: false,
                             mensage: "Erro ao enviar email"
@@ -327,7 +327,7 @@ module.exports = function (io) {
         });
 
         socket.on('send:balanceEmail', function (data) {
-            var token = "?api_token="+data.token;
+            var token = "?api_token=" + data.token;
             pathname = 'credits/';
             var url = config.word_url + pathname + data.id + "/email" + token;
             //var url = "http://world.conektta.info/api/credits/" + data.id + "/email" + token;
@@ -339,7 +339,7 @@ module.exports = function (io) {
                 if (error) {
                     socket.broadcast.emit('send:errorBalanceEmail', error, data);
                 }
-                try{
+                try {
                     if (response.body == '"Nao foi encontrado creditos para este usuario"' ||
                         response.body == '"parametro invalido"') {
                         // console.log(">>>ERROR")
@@ -349,7 +349,7 @@ module.exports = function (io) {
                         // console.log(response.body);
                         socket.emit('send:sucessBalanceEmail', response.body, data);
                     }
-                }catch (err){
+                } catch (err) {
                     socket.emit('send:errorBalanceEmail', err, data);
                 }
 
@@ -359,7 +359,7 @@ module.exports = function (io) {
         var updateCredits = function (data, callback) {
             console.log(">>>updateCredits<<<");
             var idUser = data.idUsuer;
-            var token = "?api_token="+data.token;
+            var token = "?api_token=" + data.token;
             pathname = 'credits/';
             var url = config.word_url + pathname + idUser + "/email" + token;
 
@@ -370,8 +370,8 @@ module.exports = function (io) {
                 uri: url,
                 method: "GET"
             }, function (error, response, body) {
-                console.log(">>> 1 -- updateCredits<<<");
-                console.log(response.body);
+                //console.log(">>> 1 -- updateCredits<<<");
+                //console.log(response.body);
                 if (error) {
                     socket.broadcast.emit('send:errorBalanceEmail', error, idUser);
                     var returnJson = {
@@ -405,30 +405,87 @@ module.exports = function (io) {
         };
 
 
-
         /////////// ADS /////////
 
 
         /////// ADS
 
+        socket.on('send:createAdsImageBanner', function (data, callback) {
+            saveImage(data.adbutler, function (saveImageRes) {
+                if (saveImageRes.saveImage) {
+                    imageBannerVs2(data.adbutler,saveImageRes.fileBanner, function (imageBannerRes) {
+                        if (imageBannerRes.adbutlerRes) {
+                            data.zoho.id_Adbutler = imageBannerRes.campaignID;
+                            insertRecords(data.zoho, function (insertRecordsRes) {
+                                if (insertRecordsRes.insertRecordsRes) {
+                                    var dataDebit = {
+                                        operation: data.operation,
+                                        token: data.token
+                                    };
+                                    debitCredit(dataDebit, function (debitCreditRes) {
+                                        if (debitCreditRes.debitCreditRes) {
+                                            var dataCreditsAds = {
+                                                idUsuer: data.idUsuer,
+                                                token: data.token
+                                            };
+                                            updateCredits(dataCreditsAds, function (response) {
+                                                // console.log(response);
+                                                if (response.status) {
+                                                    callback({
+                                                        success: true,
+                                                        mensage: response.status,
+                                                        user: data.idUsuer
+                                                    });
+                                                }
+                                            })
+                                        } else {
+                                            callback({
+                                                success: false,
+                                                mensage: "Erro ao publicar campanha"
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    callback({
+                                        success: false,
+                                        mensage: "Erro ao publicar campanha"
+                                    });
+                                }
+                            });
+                        } else {
+                            callback({
+                                success: false,
+                                mensage: "Erro ao publicar campanha"
+                            });
+                        }
+                    });
+                } else {
+                    callback({
+                        success: false,
+                        mensage: "Erro ao publicar campanha"
+                    });
+                }
+            });
+        });
+
         socket.on('send:createAds', function (data, callback) {
             var file = data.adbutler.fileBanner;
-            if(data.typeBanner === 'imageBanner'){
+            if (data.typeBanner === 'imageBanner') {
                 imageBanner(data.adbutler, function (imageBannerRes) {
-                    if(imageBannerRes.adbutlerRes){
+                    if (imageBannerRes.adbutlerRes) {
                         data.zoho.id_Adbutler = imageBannerRes.campaignID;
                         insertRecords(data.zoho, function (insertRecordsRes) {
 
-                            if(insertRecordsRes.insertRecordsRes){
+                            if (insertRecordsRes.insertRecordsRes) {
                                 var dataDebit = {
-                                    operation : data.operation,
-                                    token : data.token
+                                    operation: data.operation,
+                                    token: data.token
                                 };
-                                debitCredit(dataDebit,function (debitCreditRes) {
-                                    if(debitCreditRes.debitCreditRes){
+                                debitCredit(dataDebit, function (debitCreditRes) {
+                                    if (debitCreditRes.debitCreditRes) {
                                         var dataCreditsAds = {
-                                            idUsuer :data.idUsuer,
-                                            token : data.token
+                                            idUsuer: data.idUsuer,
+                                            token: data.token
                                         }
                                         updateCredits(dataCreditsAds, function (response) {
                                             // console.log(response);
@@ -440,7 +497,7 @@ module.exports = function (io) {
                                                 });
                                             }
                                         })
-                                    }else{
+                                    } else {
                                         callback({
                                             success: false,
                                             mensage: "Erro ao publicar campanha"
@@ -448,7 +505,7 @@ module.exports = function (io) {
                                     }
                                 });
 
-                            }else{
+                            } else {
                                 callback({
                                     success: false,
                                     mensage: "Erro ao publicar campanha"
@@ -456,31 +513,32 @@ module.exports = function (io) {
                             }
                         })
 
-                    }else{
+                    } else {
                         callback({
                             success: false,
                             mensage: "Erro ao publicar campanha"
                         });
-                    };
+                    }
+                    ;
 
                 })
-            }else if(data.typeBanner === 'richMediaBanner'){
+            } else if (data.typeBanner === 'richMediaBanner') {
                 richMediaBanner(data.adbutler, function (richMediaBannerRes) {
 
-                    if(richMediaBannerRes.adbutlerRes){
+                    if (richMediaBannerRes.adbutlerRes) {
 
                         insertRecords(data.zoho, function (insertRecordsRes) {
 
-                            if(insertRecordsRes.insertRecordsRes){
+                            if (insertRecordsRes.insertRecordsRes) {
                                 var dataDebit = {
-                                    operation : data.operation,
-                                    token : data.token
+                                    operation: data.operation,
+                                    token: data.token
                                 };
-                                debitCredit(dataDebit,function (debitCreditRes) {
-                                    if(debitCreditRes.debitCreditRes){
+                                debitCredit(dataDebit, function (debitCreditRes) {
+                                    if (debitCreditRes.debitCreditRes) {
                                         var dataCreditsAds = {
-                                            idUsuer :data.idUsuer,
-                                            token : data.token
+                                            idUsuer: data.idUsuer,
+                                            token: data.token
                                         };
                                         updateCredits(dataCreditsAds, function (response) {
                                             // console.log(response);
@@ -492,7 +550,7 @@ module.exports = function (io) {
                                                 });
                                             }
                                         })
-                                    }else{
+                                    } else {
                                         callback({
                                             success: false,
                                             mensage: "Erro ao publicar campanha"
@@ -500,7 +558,7 @@ module.exports = function (io) {
                                     }
                                 });
 
-                            }else{
+                            } else {
                                 callback({
                                     success: false,
                                     mensage: "Erro ao publicar campanha"
@@ -508,7 +566,7 @@ module.exports = function (io) {
                             }
                         })
 
-                    }else{
+                    } else {
                         callback({
                             success: false,
                             mensage: "Erro ao publicar campanha"
@@ -519,6 +577,85 @@ module.exports = function (io) {
             }
 
         });
+
+        var saveImage = function (adbutlerJson, callback) {
+            var fileName = adbutlerJson.idImage + ".png";
+            var path = './downloads/';
+
+            http.request(adbutlerJson.linkImage, function (response) {
+                var data = new Stream();
+
+                response.on('data', function (chunk) {
+                    data.push(chunk);
+                });
+
+                response.on('end', function () {
+                    fs.writeFile(path, data.read(), function (err) {
+                        if (err) {
+                            callback({saveImage: false});
+                        } else {
+                            callback({
+                                saveImage: true,
+                                fileBanner: path + fileName
+                            });
+                        }
+                    });
+                });
+            });
+        };
+
+        var imageBannerVs2 = function (adbutlerJson, fileBanner, callback ) {
+            var mediaGroupID = 12409;  // NOTE: use te media group ID that exists in your account
+            var fileBanner = fileBanner;
+            adbutler.creatives.images.create({
+                "group": mediaGroupID,
+                "name": adbutlerJson.name,
+                "description": adbutlerJson.description.toString(),
+                "file": fileBanner
+            }).then(function (creativeImage) {
+                adbutler.banners.images.create({
+                    "name": adbutlerJson.name,
+                    "width": 300,
+                    "height": 250,
+                    "creative": creativeImage.id
+                }).then(function (bannerImage) {
+                    adbutler.campaigns.banners.create({
+                        "advertiser": adbutlerJson.advertiserID,
+                        "width": 300,
+                        "height": 250,
+                        "name": adbutlerJson.name
+                    }).then(function (bannerCampaign) {
+                        adbutler.campaignAssignments.create({
+                            "campaign": {
+                                id: bannerCampaign.id,
+                                type: "banner_campaign"
+                            },
+                            "advertisement": {
+                                id: bannerImage.id,
+                                type: "image_banner"
+                            }
+                        }, function (error, response) {
+                            fs.exists(fileBanner, function (exists) {
+                                if (exists) {
+                                    //Show in green
+                                    fs.unlink(fileBanner);
+                                } else {
+                                    //Show in red
+                                }
+                            });
+                            /////// Success
+                            callback({adbutlerRes: true, campaignID: bannerCampaign.id});
+                        });
+                    }).catch(function (bannerCampaignError) {
+                        callback({adbutlerRes: false, error: bannerCampaignError});
+                    })
+                }).catch(function (bannerImagesError) {
+                    callback({adbutlerRes: false, error: bannerImagesError});
+                })
+            }).catch(function (creativeImageError) {
+                callback({adbutlerRes: false, error: creativeImageError});
+            });
+        };
 
         var imageBanner = function (adbutlerJson, callback) {
             var mediaGroupID = 12409;  // NOTE: use te media group ID that exists in your account
@@ -562,20 +699,20 @@ module.exports = function (io) {
                                 }
                             });
                             /////// Success
-                            callback({adbutlerRes:true, campaignID:bannerCampaign.id});
+                            callback({adbutlerRes: true, campaignID: bannerCampaign.id});
 
                         });
                     }).catch(function (bannerCampaignError) {
-                        callback({adbutlerRes:false,error:bannerCampaignError});
-                       // res.json({success: false, reponse: bannerCampaignError});
+                        callback({adbutlerRes: false, error: bannerCampaignError});
+                        // res.json({success: false, reponse: bannerCampaignError});
 
                     });
                 }).catch(function (bannerImagesError) {
-                    callback({adbutlerRes:false,error:bannerImagesError});
-                   // res.json({success: false, reponse: bannerImagesError});
+                    callback({adbutlerRes: false, error: bannerImagesError});
+                    // res.json({success: false, reponse: bannerImagesError});
                 });
             }).catch(function (creativeImageError) {
-                callback({adbutlerRes:false,error:creativeImageError});
+                callback({adbutlerRes: false, error: creativeImageError});
                 //res.json({success: false, reponse: creativeImageError});
             });
         };
@@ -622,26 +759,26 @@ module.exports = function (io) {
                                 }
                             });
                             /////// Success
-                            callback({adbutlerRes:true});
+                            callback({adbutlerRes: true});
 
                         });
                     }).catch(function (bannerCampaignError) {
-                        callback({adbutlerRes:false,error:bannerCampaignError});
+                        callback({adbutlerRes: false, error: bannerCampaignError});
                         // res.json({success: false, reponse: bannerCampaignError});
 
                     });
                 }).catch(function (bannerRichMediaError) {
-                    callback({adbutlerRes:false,error:bannerRichMediaError});
+                    callback({adbutlerRes: false, error: bannerRichMediaError});
                     // res.json({success: false, reponse: bannerImagesError});
                 });
             }).catch(function (creativeRichMediaError) {
-                callback({adbutlerRes:false,error:creativeRichMediaError});
+                callback({adbutlerRes: false, error: creativeRichMediaError});
                 //res.json({success: false, reponse: creativeImageError});
-            });;
+            });
         };
 
 
-        var insertRecords = function (zohoJson,callback) {
+        var insertRecords = function (zohoJson, callback) {
             var xml = "";
             if (zohoJson.zonas) {
                 xml = "<CustomModule2>" +
@@ -661,14 +798,14 @@ module.exports = function (io) {
                     "<FL val='Nome'>" + zohoJson.nome + "</FL>" +
                     "<FL val='ID Adbutler'>" + zohoJson.id_Adbutler + "</FL>" +
                     "<FL val='Views'>" + zohoJson.views + "</FL>" +
-                    "<FL val='Canal'>" + zohoJson.canal + "</FL>"+
+                    "<FL val='Canal'>" + zohoJson.canal + "</FL>" +
                     "</row>" +
                     "</CustomModule2>"
             }
             var url = config.zoho_url + zohoToken + "&scope=crmapi&newFormat=1&xmlData=" + xml;
 
-           /*var url = "https://crm.zoho.com/crm/private/json/CustomModule2/insertRecords?authtoken=" + zohoToken +
-                "&scope=crmapi&newFormat=1&xmlData=" + xml;*/
+            /*var url = "https://crm.zoho.com/crm/private/json/CustomModule2/insertRecords?authtoken=" + zohoToken +
+             "&scope=crmapi&newFormat=1&xmlData=" + xml;*/
 
             request({
                 uri: url,
@@ -680,17 +817,17 @@ module.exports = function (io) {
             }, function (error, response, body) {
 
                 if (error) {
-                    callback({insertRecordsRes:false,error:error});
+                    callback({insertRecordsRes: false, error: error});
                     //res.json({success: false, reponse: error}) ;
                 }
-                callback({insertRecordsRes:true})
+                callback({insertRecordsRes: true})
             });
 
         };
 
         var debitCredit = function (data, callback) {
             var operation = data.operation;
-            var token = "?api_token="+data.token;
+            var token = "?api_token=" + data.token;
             pathname = 'credits/add';
             var url = config.word_url + pathname + token;
             //var url = "http://world.conektta.info/api/credits/add" + token;
@@ -700,19 +837,19 @@ module.exports = function (io) {
                 headers: {
                     "content-type": "application/json"
                 },
-                form:operation[0]
-            }, function(errorCredits, responseCredits, bodyCredits) {
+                form: operation[0]
+            }, function (errorCredits, responseCredits, bodyCredits) {
                 if (errorCredits) {
 
-                    callback({debitCreditRes:false});
+                    callback({debitCreditRes: false});
                 }
-                console.log(bodyCredits);
+                //console.log(bodyCredits);
                 if (bodyCredits == "Dados inseridos com sucesso") {
 
-                    callback({debitCreditRes:true});
+                    callback({debitCreditRes: true});
 
-                }else{
-                    callback({debitCreditRes:false});
+                } else {
+                    callback({debitCreditRes: false});
                 }
 
             });

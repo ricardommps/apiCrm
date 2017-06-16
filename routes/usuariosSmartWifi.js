@@ -36,7 +36,7 @@ router.get('/queryLicense', function(req, res, next) {
     var license = req.query.licensa;
     pathname = 'licencas/consulta/';
     var url = config.word_url + pathname + license + token;
-    console.log(url);
+    //console.log(url);
    // var url = "http://world.conektta.info/api/licencas/consulta/"+license + token;
     request({
         uri: url,

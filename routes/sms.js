@@ -73,7 +73,7 @@ router.get('/contacts', function(req, res, next) {
         var url = config.word_url + pathname + idUser + token;
     }
 
-    console.log(url);
+    //console.log(url);
    // var url = config.word_url + pathname + idUser + token;
     //var url = "http://world.conektta.info/api/contatos/getContatosSms/"+ idUser + token;
     request({
@@ -109,7 +109,7 @@ router.post('/contactsToList', function(req, res, next) {
             res.send(error);
             return;
         }
-        console.log(response.body);
+       // console.log(response.body);
         try {
             var json = JSON.parse(response.body);
             var arrayContacts = [];

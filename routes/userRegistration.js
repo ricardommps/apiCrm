@@ -95,7 +95,7 @@ router.get('/userPermissions', function(req, res, next) {
     var idUser = req.query.idUser;
     token = "?api_token="+global.token;
     var url = config.word_url + pathname + idUser + token;
-    console.log(url);
+    //console.log(url);
     request({
         uri: url,
         method: "GET",
@@ -104,7 +104,7 @@ router.get('/userPermissions', function(req, res, next) {
         if (error) {
             res.json(error);
         }
-        console.log(body);
+       // console.log(body);
         if(response){
             if(response.body === 'Usuario não possui estabelecimentos cadastrados'){
                 res.json({ success: false})

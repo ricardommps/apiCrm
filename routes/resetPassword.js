@@ -49,7 +49,7 @@ router.post('/sendCode', function (req, res, next) {
             res.send(error);
             return;
         }
-        console.log(body);
+       // console.log(body);
         if(body == 'Codigo Enviado para o email' || body == 'Codigo Enviado para o celular'){
             res.json({success: true, response:body});
         }else{

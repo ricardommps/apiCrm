@@ -49,7 +49,7 @@ router.post('/stats', function (req, res, next) {
             res.json({success: true, response: stats});
         })
         .catch(function (statsError) {
-            console.log(statsError);
+           // console.log(statsError);
             res.json({success: false, response: statsError});
         });
 

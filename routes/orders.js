@@ -15,7 +15,7 @@ var WooCommerce = new WooCommerceAPI({
 
 router.get('/myOrders', function (req, res, next) {
     var email = req.query.email;
-    console.log(req.query);
+    //console.log(req.query);
     WooCommerce.get('orders?search='+email, function(err, data, response) {
         try{
             var jsonResponse = JSON.parse(response);

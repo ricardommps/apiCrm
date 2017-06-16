@@ -71,7 +71,7 @@ router.get('/contacts', function(req, res, next) {
         var url = config.word_url + pathname + idUser + token;
     }
 
-    console.log(url);
+    //console.log(url);
 
     //var url = "http://world.conektta.info/api/contatos/getContatos/"+idUser+token;
     request({
@@ -255,7 +255,7 @@ router.get('/getCampanha', function(req, res, next) {
             res.send(error);
             return;
         }
-        console.log(body);
+       // console.log(body);
         try{
             res.json({success:true,response:JSON.parse(response.body)});
         }catch (err){

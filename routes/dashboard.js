@@ -37,7 +37,7 @@ router.get('/listsLastUsers', function(req, res, next) {
    // var url = config.word_url + pathname + idUser + token;
     //var url = "http://world.conektta.info/api/contatos/getconectados/"+idUser+token;
     var url = config.word_url + pathname + req.query.pasId + "/" +  token;
-    console.log(url);
+    //console.log(url);
     request({
         uri: url,
         method: "GET"
