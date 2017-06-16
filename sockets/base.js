@@ -411,6 +411,8 @@ module.exports = function (io) {
         /////// ADS
 
         socket.on('send:createAdsImageBanner', function (data, callback) {
+            console.log(">>>>>>>");
+            console.log(data);
             saveImage(data.adbutler, function (saveImageRes) {
                 if (saveImageRes.saveImage) {
                     imageBannerVs2(data.adbutler,saveImageRes.fileBanner, function (imageBannerRes) {
