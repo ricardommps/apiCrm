@@ -591,12 +591,6 @@ module.exports = function (io) {
             path = path + fileName;
             console.log("<<<<path>>>>");
             console.log(path);
-
-            callback({
-                saveImage: true,
-                fileBanner: path + fileName
-            });
-
             http.request(adbutlerJson.linkImage, function (response) {
                 console.log(">>>request<<<");
                 console.log(response);
@@ -626,7 +620,6 @@ module.exports = function (io) {
             console.log(">>>>imageBannerVs2<<<<<");
             console.log(adbutlerJson);
             var mediaGroupID = 12409;  // NOTE: use te media group ID that exists in your account
-            var fileBanner = fileBanner;
             console.log(fileBanner);
             adbutler.creatives.images.create({
                 "group": mediaGroupID,
