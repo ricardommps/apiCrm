@@ -413,7 +413,8 @@ module.exports = function (io) {
         socket.on('send:createAdsImageBanner', function (data, callback) {
             console.log(">>>>>>>createAdsImageBanner");
             console.log(data);
-            saveImage(data.adbutler, function (saveImageRes) {
+            callback({success: true, data:data.adbutler});
+           /* saveImage(data.adbutler, function (saveImageRes) {
                 console.log(">>>>>>saveImageRes<<<<<<");
                 if (saveImageRes.saveImage) {
                     imageBannerVs2(data.adbutler,saveImageRes.fileBanner, function (imageBannerRes) {
@@ -468,7 +469,7 @@ module.exports = function (io) {
                         mensage: "Erro ao publicar campanha"
                     });
                 }
-            });
+            });*/
         });
 
         socket.on('send:createAds', function (data, callback) {
