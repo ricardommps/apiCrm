@@ -592,7 +592,8 @@ module.exports = function (io) {
             console.log("<<<<path>>>>");
             console.log(path);
             console.log(adbutlerJson.linkImage);
-            http.request(adbutlerJson.linkImage, function (response,error) {
+            var url = 'http://www.google.com/images/srpr/logo11w.png';
+            http.request(url, function (response,error) {
                 console.log(">>>request<<<");
                 console.log(error);
                 console.log(response);
