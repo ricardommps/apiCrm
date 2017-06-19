@@ -17,7 +17,8 @@ var upload = multer({ storage : storage}).single('file');
 
 /* GET users listing. */
 router.post('/upload', function(req, res, next) {
-
+    console.log(req);
+    console.log(res);
     upload(req,res,function(err) {
         if(err) {
             res.json({error_code:1,err_desc:err});

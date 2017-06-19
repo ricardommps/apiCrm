@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e218b52a-662d-4884-9292-37a365dcb4b7" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/uploadBanner.js" afterPath="$PROJECT_DIR$/routes/uploadBanner.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sockets/base.js" afterPath="$PROJECT_DIR$/sockets/base.js" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -32,21 +33,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="base.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="base.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sockets/base.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="616" column="21" lean-forward="false" selection-start-line="616" selection-start-column="21" selection-end-line="616" selection-end-column="21" />
+            <state relative-caret-position="-1683">
+              <caret line="529" column="54" lean-forward="false" selection-start-line="529" selection-start-column="54" selection-end-line="529" selection-end-column="54" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="uploadBanner.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="uploadBanner.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/uploadBanner.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="7" column="36" lean-forward="false" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="36" />
+            <state relative-caret-position="238">
+              <caret line="20" column="21" lean-forward="false" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -143,7 +144,6 @@
         <option value="$PROJECT_DIR$/sockets/smsBase.js" />
         <option value="$PROJECT_DIR$/config-aws-ses.json" />
         <option value="$PROJECT_DIR$/routes/profileConnected.js" />
-        <option value="$PROJECT_DIR$/routes/uploadBanner.js" />
         <option value="$PROJECT_DIR$/routes/creditOperation.js" />
         <option value="$PROJECT_DIR$/routes/login.js" />
         <option value="$PROJECT_DIR$/config.json" />
@@ -165,6 +165,7 @@
         <option value="$PROJECT_DIR$/routes/smtpAmazon.js" />
         <option value="$PROJECT_DIR$/sockets/smtpAmazon.js" />
         <option value="$PROJECT_DIR$/sockets/base.js" />
+        <option value="$PROJECT_DIR$/routes/uploadBanner.js" />
       </list>
     </option>
   </component>
@@ -890,12 +891,12 @@
       <workItem from="1497573935850" duration="800000" />
       <workItem from="1497579513169" duration="616000" />
       <workItem from="1497614263052" duration="6843000" />
-      <workItem from="1497883339506" duration="6176000" />
+      <workItem from="1497883339506" duration="8117000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="858468000" />
+    <option name="totallyTimeSpent" value="860409000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -1129,18 +1130,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/uploadBanner.js">
+    <entry file="file://$PROJECT_DIR$/sockets/base.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="7" column="36" lean-forward="false" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="36" />
+        <state relative-caret-position="-1683">
+          <caret line="529" column="54" lean-forward="false" selection-start-line="529" selection-start-column="54" selection-end-line="529" selection-end-column="54" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sockets/base.js">
+    <entry file="file://$PROJECT_DIR$/routes/uploadBanner.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="616" column="21" lean-forward="false" selection-start-line="616" selection-start-column="21" selection-end-line="616" selection-end-column="21" />
+        <state relative-caret-position="238">
+          <caret line="20" column="21" lean-forward="false" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
           <folding />
         </state>
       </provider>

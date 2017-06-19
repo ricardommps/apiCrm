@@ -527,7 +527,7 @@ module.exports = function (io) {
                     ;
 
                 })
-            } else if (data.typeBanner === 'richMediaBanner') {
+            } else if (data.typeBanner === 'loadBanner') {
                 richMediaBanner(data.adbutler, function (richMediaBannerRes) {
 
                     if (richMediaBannerRes.adbutlerRes) {
@@ -632,16 +632,16 @@ module.exports = function (io) {
                 console.log(creativeImage);
                 adbutler.banners.images.create({
                     "name": adbutlerJson.name,
-                    "width": 300,
-                    "height": 250,
+                    "width": 350,
+                    "height": 400,
                     "creative": creativeImage.id
                 }).then(function (bannerImage) {
                     console.log(">>>>bannerImage<<<<<");
                     console.log(bannerImage);
                     adbutler.campaigns.banners.create({
                         "advertiser": adbutlerJson.advertiserID,
-                        "width": 300,
-                        "height": 250,
+                        "width": 350,
+                        "height": 400,
                         "name": adbutlerJson.name
                     }).then(function (bannerCampaign) {
                         console.log(">>>>bannerCampaign<<<<<");
@@ -698,16 +698,16 @@ module.exports = function (io) {
                 // Creating a rich media banner
                 adbutler.banners.images.create({
                     "name": adbutlerJson.name,
-                    "width": 300,
-                    "height": 250,
+                    "width": 350,
+                    "height": 400,
                     "creative": creativeImage.id
                 }).then(function (bannerImages) {
                     // Creating a banner campaign
                     adbutler.campaigns.banners.create({
                         "advertiser": adbutlerJson.advertiserID,
-                        "height": 250,
+                        "width": 350,
+                        "height": 400,
                         "name": adbutlerJson.name,
-                        "width": 300
                     }).then(function (bannerCampaign) {
                         // Assigning banner to the campaign
                         adbutler.campaignAssignments.create({
