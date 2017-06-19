@@ -411,9 +411,10 @@ module.exports = function (io) {
         /////// ADS
 
         socket.on('send:createAdsImageBanner', function (data, callback) {
-            console.log(">>>>>>>");
+            console.log(">>>>>>>createAdsImageBanner");
             console.log(data);
             saveImage(data.adbutler, function (saveImageRes) {
+                console.log(">>>>>>saveImageRes<<<<<<");
                 if (saveImageRes.saveImage) {
                     imageBannerVs2(data.adbutler,saveImageRes.fileBanner, function (imageBannerRes) {
                         if (imageBannerRes.adbutlerRes) {
@@ -607,6 +608,8 @@ module.exports = function (io) {
         };
 
         var imageBannerVs2 = function (adbutlerJson, fileBanner, callback ) {
+            console.log(">>>>imageBannerVs2<<<<<");
+            console.log(adbutlerJson);
             var mediaGroupID = 12409;  // NOTE: use te media group ID that exists in your account
             var fileBanner = fileBanner;
             adbutler.creatives.images.create({
@@ -615,18 +618,24 @@ module.exports = function (io) {
                 "description": adbutlerJson.description.toString(),
                 "file": fileBanner
             }).then(function (creativeImage) {
+                console.log(">>>>creativeImage<<<<<");
+                console.log(creativeImage);
                 adbutler.banners.images.create({
                     "name": adbutlerJson.name,
                     "width": 300,
                     "height": 250,
                     "creative": creativeImage.id
                 }).then(function (bannerImage) {
+                    console.log(">>>>bannerImage<<<<<");
+                    console.log(bannerImage);
                     adbutler.campaigns.banners.create({
                         "advertiser": adbutlerJson.advertiserID,
                         "width": 300,
                         "height": 250,
                         "name": adbutlerJson.name
                     }).then(function (bannerCampaign) {
+                        console.log(">>>>bannerCampaign<<<<<");
+                        console.log(bannerCampaign);
                         adbutler.campaignAssignments.create({
                             "campaign": {
                                 id: bannerCampaign.id,
@@ -649,12 +658,18 @@ module.exports = function (io) {
                             callback({adbutlerRes: true, campaignID: bannerCampaign.id});
                         });
                     }).catch(function (bannerCampaignError) {
+                        console.log(">>>>bannerCampaignError<<<<<");
+                        console.log(bannerCampaignError);
                         callback({adbutlerRes: false, error: bannerCampaignError});
                     })
                 }).catch(function (bannerImagesError) {
+                    console.log(">>>>bannerImagesError<<<<<");
+                    console.log(bannerImagesError);
                     callback({adbutlerRes: false, error: bannerImagesError});
                 })
             }).catch(function (creativeImageError) {
+                console.log(">>>>creativeImageError<<<<<");
+                console.log(creativeImageError);
                 callback({adbutlerRes: false, error: creativeImageError});
             });
         };
