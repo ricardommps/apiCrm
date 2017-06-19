@@ -474,7 +474,9 @@ module.exports = function (io) {
         });
 
         socket.on('send:createAds', function (data, callback) {
+            console.log(">>>>>send:createAds<<<<<");
             var file = data.adbutler.fileBanner;
+            console.log(file);
             if (data.typeBanner === 'loadBanner') {
                 imageBanner(data.adbutler, function (imageBannerRes) {
                     if (imageBannerRes.adbutlerRes) {
@@ -685,8 +687,12 @@ module.exports = function (io) {
         };
 
         var imageBanner = function (adbutlerJson, callback) {
+
+            console.log(">>>>imageBanner<<<<");
             var mediaGroupID = 12409;  // NOTE: use te media group ID that exists in your account
             var fileBanner = adbutlerJson.fileBanner;
+
+            console.log(fileBanner);
 
 
             adbutler.creatives.images.create({
@@ -730,15 +736,21 @@ module.exports = function (io) {
 
                         });
                     }).catch(function (bannerCampaignError) {
+                        console.log("-----bannerCampaignError");
+                        console.log(bannerCampaignError);
                         callback({adbutlerRes: false, error: bannerCampaignError});
                         // res.json({success: false, reponse: bannerCampaignError});
 
                     });
                 }).catch(function (bannerImagesError) {
+                    console.log("-----bannerImagesError");
+                    console.log(bannerImagesError);
                     callback({adbutlerRes: false, error: bannerImagesError});
                     // res.json({success: false, reponse: bannerImagesError});
                 });
             }).catch(function (creativeImageError) {
+                console.log("-----creativeImageError");
+                console.log(creativeImageError);
                 callback({adbutlerRes: false, error: creativeImageError});
                 //res.json({success: false, reponse: creativeImageError});
             });
