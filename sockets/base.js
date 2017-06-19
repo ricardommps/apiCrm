@@ -627,6 +627,7 @@ module.exports = function (io) {
             console.log(adbutlerJson);
             var mediaGroupID = 12409;  // NOTE: use te media group ID that exists in your account
             var fileBanner = fileBanner;
+            console.log(fileBanner);
             adbutler.creatives.images.create({
                 "group": mediaGroupID,
                 "name": adbutlerJson.name,
