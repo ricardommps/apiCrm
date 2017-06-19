@@ -416,6 +416,7 @@ module.exports = function (io) {
 
             saveImage(data.adbutler, function (saveImageRes) {
                 console.log(">>>>>>saveImageRes<<<<<<");
+                console.log(saveImageRes);
                 if (saveImageRes.saveImage) {
                     imageBannerVs2(data.adbutler, saveImageRes.fileBanner, function (imageBannerRes) {
                         if (imageBannerRes.adbutlerRes) {
@@ -613,7 +614,7 @@ module.exports = function (io) {
                         } else {
                             callback({
                                 saveImage: true,
-                                fileBanner: path + fileName
+                                fileBanner: path
                             });
                         }
                     });
