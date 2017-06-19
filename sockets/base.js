@@ -701,6 +701,8 @@ module.exports = function (io) {
                 "description": adbutlerJson.description.toString(),
                 "file": fileBanner
             }).then(function (creativeImage) {
+                console.log(">>>creativeImage<<<");
+                console.log(creativeImage);
                 // Creating a rich media banner
                 adbutler.banners.images.create({
                     "name": adbutlerJson.name,
@@ -708,6 +710,8 @@ module.exports = function (io) {
                     "height": 400,
                     "creative": creativeImage.id
                 }).then(function (bannerImages) {
+                    console.log(">>>bannerImages<<<");
+                    console.log(bannerImages);
                     // Creating a banner campaign
                     adbutler.campaigns.banners.create({
                         "advertiser": adbutlerJson.advertiserID,
@@ -715,6 +719,8 @@ module.exports = function (io) {
                         "height": 400,
                         "name": adbutlerJson.name,
                     }).then(function (bannerCampaign) {
+                        console.log(">>>bannerCampaign<<<");
+                        console.log(bannerCampaign);
                         // Assigning banner to the campaign
                         adbutler.campaignAssignments.create({
                             "campaign": bannerCampaign.id,
@@ -723,6 +729,8 @@ module.exports = function (io) {
                                 type: "banner"
                             }
                         }, function (error, response) {
+                            console.log(">>>campaignAssignments<<<");
+                            console.log(response);
                             fs.exists(fileBanner, function (exists) {
                                 if (exists) {
                                     //Show in green
