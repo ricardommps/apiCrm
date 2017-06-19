@@ -582,6 +582,8 @@ module.exports = function (io) {
         });
 
         var saveImage = function (adbutlerJson, callback) {
+            console.log(">>>>>saveImage<<<<<");
+            console.log(saveImage);
             var fileName = adbutlerJson.idImage + ".png";
             var path = './downloads/';
 
