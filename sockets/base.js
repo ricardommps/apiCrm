@@ -658,16 +658,29 @@ module.exports = function (io) {
                                 type: "image_banner"
                             }
                         }, function (error, response) {
-                            fs.exists(fileBanner, function (exists) {
-                                if (exists) {
-                                    //Show in green
-                                    fs.unlink(fileBanner);
-                                } else {
-                                    //Show in red
-                                }
-                            });
-                            /////// Success
-                            callback({adbutlerRes: true, campaignID: bannerCampaign.id});
+                            if(error){
+                                fs.exists(fileBanner, function (exists) {
+                                    if (exists) {
+                                        //Show in green
+                                        fs.unlink(fileBanner);
+                                    } else {
+                                        //Show in red
+                                    }
+                                });
+                                callback({adbutlerRes: false, error: error});
+                            }else{
+                                fs.exists(fileBanner, function (exists) {
+                                    if (exists) {
+                                        //Show in green
+                                        fs.unlink(fileBanner);
+                                    } else {
+                                        //Show in red
+                                    }
+                                });
+                                /////// Success
+                                callback({adbutlerRes: true, campaignID: bannerCampaign.id});
+                            }
+
                         });
                     }).catch(function (bannerCampaignError) {
                         console.log(">>>>bannerCampaignError<<<<<");
@@ -730,17 +743,31 @@ module.exports = function (io) {
                             }
                         }, function (error, response) {
                             console.log(">>>campaignAssignments<<<");
-                            console.log(response);
-                            fs.exists(fileBanner, function (exists) {
-                                if (exists) {
-                                    //Show in green
-                                    fs.unlink(fileBanner);
-                                } else {
-                                    //Show in red
-                                }
-                            });
-                            /////// Success
-                            callback({adbutlerRes: true, campaignID: bannerCampaign.id});
+                            console.log(error);
+                            if(error){
+                                fs.exists(fileBanner, function (exists) {
+                                    if (exists) {
+                                        //Show in green
+                                        fs.unlink(fileBanner);
+                                    } else {
+                                        //Show in red
+                                    }
+                                });
+                                /////// Success
+                                callback({adbutlerRes: false, campaignID: error});
+                            }else{
+                                fs.exists(fileBanner, function (exists) {
+                                    if (exists) {
+                                        //Show in green
+                                        fs.unlink(fileBanner);
+                                    } else {
+                                        //Show in red
+                                    }
+                                });
+                                /////// Success
+                                callback({adbutlerRes: true, campaignID: bannerCampaign.id});
+                            }
+
 
                         });
                     }).catch(function (bannerCampaignError) {
