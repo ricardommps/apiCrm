@@ -735,11 +735,16 @@ module.exports = function (io) {
                         console.log(">>>bannerCampaign<<<");
                         console.log(bannerCampaign);
                         // Assigning banner to the campaign
+
+
                         adbutler.campaignAssignments.create({
-                            "campaign": bannerCampaign.id,
+                            "campaign": {
+                                id: bannerCampaign.id,
+                                type: "banner_campaign"
+                            },
                             "advertisement": {
                                 id: bannerImages.id,
-                                type: "banner"
+                                type: "image_banner"
                             }
                         }, function (error, response) {
                             console.log(">>>campaignAssignments<<<");
