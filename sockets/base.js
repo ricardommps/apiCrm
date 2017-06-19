@@ -416,8 +416,7 @@ module.exports = function (io) {
 
             saveImage(data.adbutler, function (saveImageRes) {
                 console.log(">>>>>>saveImageRes<<<<<<");
-                callback({success: true, data: data.saveImageRes});
-                /*if (saveImageRes.saveImage) {
+                if (saveImageRes.saveImage) {
                     imageBannerVs2(data.adbutler, saveImageRes.fileBanner, function (imageBannerRes) {
                         if (imageBannerRes.adbutlerRes) {
                             data.zoho.id_Adbutler = imageBannerRes.campaignID;
@@ -469,7 +468,7 @@ module.exports = function (io) {
                         success: false,
                         mensage: "Erro ao publicar campanha"
                     });
-                }*/
+                }
             });
         });
 
@@ -588,12 +587,16 @@ module.exports = function (io) {
             var fileName = adbutlerJson.idImage + ".png";
             var path = './downloads/';
 
+            path = path + fileName;
+
             callback({
                 saveImage: true,
                 fileBanner: path + fileName
             });
 
-            /*http.request(adbutlerJson.linkImage, function (response) {
+            http.request(adbutlerJson.linkImage, function (response) {
+                console.log(">>>request<<<");
+                console.log(response);
              var data = new Stream();
 
              response.on('data', function (chunk) {
@@ -603,6 +606,7 @@ module.exports = function (io) {
              response.on('end', function () {
              fs.writeFile(path, data.read(), function (err) {
              if (err) {
+                 console.log(err);
              callback({saveImage: false});
              } else {
              callback({
@@ -612,7 +616,7 @@ module.exports = function (io) {
              }
              });
              });
-             });*/
+             });
         };
 
         var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
