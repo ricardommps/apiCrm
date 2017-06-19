@@ -588,6 +588,8 @@ module.exports = function (io) {
             var path = './downloads/';
 
             path = path + fileName;
+            console.log("<<<<path>>>>");
+            console.log(path);
 
             callback({
                 saveImage: true,
@@ -597,26 +599,26 @@ module.exports = function (io) {
             http.request(adbutlerJson.linkImage, function (response) {
                 console.log(">>>request<<<");
                 console.log(response);
-             var data = new Stream();
+                var data = new Stream();
 
-             response.on('data', function (chunk) {
-             data.push(chunk);
-             });
+                response.on('data', function (chunk) {
+                    data.push(chunk);
+                });
 
-             response.on('end', function () {
-             fs.writeFile(path, data.read(), function (err) {
-             if (err) {
-                 console.log(err);
-             callback({saveImage: false});
-             } else {
-             callback({
-             saveImage: true,
-             fileBanner: path + fileName
-             });
-             }
-             });
-             });
-             });
+                response.on('end', function () {
+                    fs.writeFile(path, data.read(), function (err) {
+                        if (err) {
+                            console.log(err);
+                            callback({saveImage: false});
+                        } else {
+                            callback({
+                                saveImage: true,
+                                fileBanner: path + fileName
+                            });
+                        }
+                    });
+                });
+            });
         };
 
         var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
