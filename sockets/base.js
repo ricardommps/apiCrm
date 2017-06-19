@@ -592,8 +592,9 @@ module.exports = function (io) {
             console.log("<<<<path>>>>");
             console.log(path);
             console.log(adbutlerJson.linkImage);
-            http.request(adbutlerJson.linkImage, function (response) {
+            http.request(adbutlerJson.linkImage, function (response,error) {
                 console.log(">>>request<<<");
+                console.log(error);
                 console.log(response);
                 var data = new Stream();
 
