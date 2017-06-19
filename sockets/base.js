@@ -475,7 +475,7 @@ module.exports = function (io) {
 
         socket.on('send:createAds', function (data, callback) {
             var file = data.adbutler.fileBanner;
-            if (data.typeBanner === 'imageBanner') {
+            if (data.typeBanner === 'loadBanner') {
                 imageBanner(data.adbutler, function (imageBannerRes) {
                     if (imageBannerRes.adbutlerRes) {
                         data.zoho.id_Adbutler = imageBannerRes.campaignID;
@@ -527,7 +527,7 @@ module.exports = function (io) {
                     ;
 
                 })
-            } else if (data.typeBanner === 'loadBanner') {
+            } else if (data.typeBanner === 'htmlzip') {
                 richMediaBanner(data.adbutler, function (richMediaBannerRes) {
 
                     if (richMediaBannerRes.adbutlerRes) {
