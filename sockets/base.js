@@ -104,7 +104,7 @@ module.exports = function (io) {
 
                             })
                             .catch(function (err) {
-                               // console.log(err.error);
+                                // console.log(err.error);
                                 callback({
                                     success: false,
                                     mensage: "Errro ao gravar campanha"
@@ -192,7 +192,7 @@ module.exports = function (io) {
                                     mensage: errorTemplate
                                 });
                             }
-                          //  console.log(">>>> 2 <<<<");
+                            //  console.log(">>>> 2 <<<<");
                             //console.log(bodyTemplate);
                             try {
                                 var templateJson = JSON.parse(bodyTemplate);
@@ -221,8 +221,8 @@ module.exports = function (io) {
                                                 mensage: errorTemplate
                                             });
                                         }
-                                       // console.log(">>>> 3 <<<<");
-                                       // console.log(responseSendEmail.body);
+                                        // console.log(">>>> 3 <<<<");
+                                        // console.log(responseSendEmail.body);
                                         try {
                                             if (responseSendEmail.body === "Sucesso") {
                                                 var token = "?api_token=" + data.token;
@@ -244,8 +244,8 @@ module.exports = function (io) {
                                                             mensage: "Erro ao enviar email"
                                                         });
                                                     }
-                                                  //  console.log(">>>> 4 <<<<");
-                                                  //  console.log(bodyCredits);
+                                                    //  console.log(">>>> 4 <<<<");
+                                                    //  console.log(bodyCredits);
                                                     if (bodyCredits == "Dados inseridos com sucess") {
 
                                                         var dataCreditsAds = {
@@ -253,8 +253,8 @@ module.exports = function (io) {
                                                             token: data.token
                                                         };
                                                         updateCredits(operation.id_usuario, function (response) {
-                                                          //  console.log(">>>> 5 <<<<");
-                                                          //  console.log(response);
+                                                            //  console.log(">>>> 5 <<<<");
+                                                            //  console.log(response);
                                                             if (response.status) {
                                                                 callback({
                                                                     success: true,
@@ -413,11 +413,12 @@ module.exports = function (io) {
         socket.on('send:createAdsImageBanner', function (data, callback) {
             console.log(">>>>>>>createAdsImageBanner");
             console.log(data);
-            callback({success: true, data:data.adbutler});
-           /* saveImage(data.adbutler, function (saveImageRes) {
+
+            saveImage(data.adbutler, function (saveImageRes) {
                 console.log(">>>>>>saveImageRes<<<<<<");
-                if (saveImageRes.saveImage) {
-                    imageBannerVs2(data.adbutler,saveImageRes.fileBanner, function (imageBannerRes) {
+                callback({success: true, data: data.saveImageRes});
+                /*if (saveImageRes.saveImage) {
+                    imageBannerVs2(data.adbutler, saveImageRes.fileBanner, function (imageBannerRes) {
                         if (imageBannerRes.adbutlerRes) {
                             data.zoho.id_Adbutler = imageBannerRes.campaignID;
                             insertRecords(data.zoho, function (insertRecordsRes) {
@@ -468,8 +469,8 @@ module.exports = function (io) {
                         success: false,
                         mensage: "Erro ao publicar campanha"
                     });
-                }
-            });*/
+                }*/
+            });
         });
 
         socket.on('send:createAds', function (data, callback) {
@@ -575,7 +576,8 @@ module.exports = function (io) {
                             success: false,
                             mensage: "Erro ao publicar campanha"
                         });
-                    };
+                    }
+                    ;
 
                 })
             }
@@ -583,34 +585,37 @@ module.exports = function (io) {
         });
 
         var saveImage = function (adbutlerJson, callback) {
-            console.log(">>>>>saveImage<<<<<");
-            console.log(saveImage);
             var fileName = adbutlerJson.idImage + ".png";
             var path = './downloads/';
 
-            http.request(adbutlerJson.linkImage, function (response) {
-                var data = new Stream();
-
-                response.on('data', function (chunk) {
-                    data.push(chunk);
-                });
-
-                response.on('end', function () {
-                    fs.writeFile(path, data.read(), function (err) {
-                        if (err) {
-                            callback({saveImage: false});
-                        } else {
-                            callback({
-                                saveImage: true,
-                                fileBanner: path + fileName
-                            });
-                        }
-                    });
-                });
+            callback({
+                saveImage: true,
+                fileBanner: path + fileName
             });
+
+            /*http.request(adbutlerJson.linkImage, function (response) {
+             var data = new Stream();
+
+             response.on('data', function (chunk) {
+             data.push(chunk);
+             });
+
+             response.on('end', function () {
+             fs.writeFile(path, data.read(), function (err) {
+             if (err) {
+             callback({saveImage: false});
+             } else {
+             callback({
+             saveImage: true,
+             fileBanner: path + fileName
+             });
+             }
+             });
+             });
+             });*/
         };
 
-        var imageBannerVs2 = function (adbutlerJson, fileBanner, callback ) {
+        var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
             console.log(">>>>imageBannerVs2<<<<<");
             console.log(adbutlerJson);
             var mediaGroupID = 12409;  // NOTE: use te media group ID that exists in your account
