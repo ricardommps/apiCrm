@@ -591,11 +591,8 @@ module.exports = function (io) {
             path = path + fileName;
             console.log("<<<<path>>>>");
             console.log(path);
-            console.log(adbutlerJson.linkImage);
-            var url = 'http://www.google.com/images/srpr/logo11w.png';
-            http.request(url, function (response,error) {
+            http.request(adbutlerJson.linkImage, function (response) {
                 console.log(">>>request<<<");
-                console.log(error);
                 console.log(response);
                 var data = new Stream();
 
@@ -617,7 +614,7 @@ module.exports = function (io) {
                         }
                     });
                 });
-            });
+            }).end();
         };
 
         var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
