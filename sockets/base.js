@@ -586,11 +586,12 @@ module.exports = function (io) {
 
         var saveImage = function (adbutlerJson, callback) {
             var fileName = adbutlerJson.idImage + ".png";
-            var path = './downloads/';
+            var path = './uploads/';
 
             path = path + fileName;
             console.log("<<<<path>>>>");
             console.log(path);
+            console.log(adbutlerJson.linkImage);
             http.request(adbutlerJson.linkImage, function (response) {
                 console.log(">>>request<<<");
                 console.log(response);
@@ -606,6 +607,7 @@ module.exports = function (io) {
                             console.log(err);
                             callback({saveImage: false});
                         } else {
+                            console.log("success save");
                             callback({
                                 saveImage: true,
                                 fileBanner: path
