@@ -14,32 +14,89 @@ var adbutler = new AdButler({
 var config = require('../config.json');
 var zohoToken = "a41d3828cae33450cdd258a46f0e85f6";
 
+
+var placements = function (placementsJson, schedule, imageBannerId, callback) {
+    console.log(">>>> placements <<<<");
+    console.log(schedule);
+    var inserted = 0;
+    var zone = 0;
+    var data = {};
+    for (var i = 0; i < placementsJson.zone.length; i++) {
+        zone = parseInt(placementsJson.zone[i].id, 10);
+        if (placementsJson.per_user_view_limit == 0) {
+            data = {
+                "active": true,
+                "schedule": schedule,
+                "advertisement": {
+                    id: imageBannerId,
+                    type: "banner_campaign"
+                },
+                "zone": {
+                    id: zone,
+                    type: "banner_zone"
+                },
+                "cost": {
+                    cpm: placementsJson.cost.cpm,
+                    cpc: 0.0,
+                    cpa: 0.0
+                }
+            }
+        }else{
+            data = {
+                "active": true,
+                "schedule": schedule,
+                "advertisement": {
+                    id: imageBannerId,
+                    type: "banner_campaign"
+                },
+                "zone": {
+                    id: zone,
+                    type: "banner_zone"
+                },
+                "cost": {
+                    cpm: placementsJson.cost.cpm,
+                    cpc: 0.0,
+                    cpa: 0.0
+                }
+            }
+        }
+
+        adbutler.placements.create(data).then(function (placements) {
+            if (++inserted == placementsJson.zone.length) {
+                callback({placementsRes: true, placements: placements});
+            }
+
+        }).catch(function (placementsError) {
+            callback({placementsRes: false, error: placementsError});
+            return;
+        });
+    }
+
+}
+
 var createSchedules = function (schedulesJson, callback) {
     console.log(schedulesJson.start_date);
-    if(moment(schedulesJson.start_date, "YYYY-MM-DD").isValid()){
+    if (moment(schedulesJson.start_date, "YYYY-MM-DD").isValid()) {
         console.log("-----------IF-------");
         adbutler.schedules.create({
             "delivery_method": "default",
-            "start_date": "2017-06-28 14:00:00",
-            "end_date": "2017-06-29 14:00:00",
-
+            "start_date": schedulesJson.start_date,
+            "end_date": schedulesJson.end_date
         }).then(function (schedules) {
             console.log(schedules);
-            callback({schedulesRes: true, schedules:schedules});
+            callback({schedulesRes: true, schedules: schedules});
         }).catch(function (schedulesError) {
             console.log(schedulesError);
             callback({schedulesRes: false});
         });
-    }else{
+    } else {
         console.log("-----------ELSE-------");
         adbutler.schedules.create({
             "delivery_method": "default",
         }).then(function (schedules) {
-            console.log(schedules);
-            callback({schedulesRes: true, schedules:schedules});
+            callback({schedulesRes: true, schedules: schedules});
         }).catch(function (schedulesError) {
-            console.log(schedulesError);
-            callback({schedulesRes: false});
+            callback({schedulesRes: false, error: schedulesError});
         });
     }
 
@@ -72,12 +129,13 @@ var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
                         id: bannerCampaign.id,
                         type: "banner_campaign"
                     },
+                    active: false,
                     "advertisement": {
                         id: bannerImage.id,
                         type: "image_banner"
                     }
                 }, function (error, response) {
-                    if(error){
+                    if (error) {
                         fs.exists(fileBanner, function (exists) {
                             if (exists) {
                                 //Show in green
@@ -87,7 +145,7 @@ var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
                             }
                         });
                         callback({adbutlerRes: false, error: error});
-                    }else{
+                    } else {
                         fs.exists(fileBanner, function (exists) {
                             if (exists) {
                                 //Show in green
@@ -97,7 +155,14 @@ var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
                             }
                         });
                         /////// Success
-                        callback({adbutlerRes: true, campaignID: bannerCampaign.id});
+                        callback(
+                            {
+                                adbutlerRes: true,
+                                campaignID: bannerCampaign.id,
+                                creativeImageID: creativeImage.id,
+                                bannerID: response.advertisement.id
+                            }
+                        );
                     }
 
                 });
@@ -117,13 +182,13 @@ var saveImage = function (adbutlerJson, callback) {
     var fileName = "";
     var path = "";
 
-    if(adbutlerJson.fileBanner){
-        path = './uploads/'+adbutlerJson.fileBanner;
+    if (adbutlerJson.fileBanner) {
+        path = './uploads/' + adbutlerJson.fileBanner;
         callback({
             saveImage: true,
             fileBanner: path
         });
-    }else{
+    } else {
         fileName = adbutlerJson.idImage + ".png";
         path = './uploads/';
         path = path + fileName;
@@ -142,7 +207,7 @@ var saveImage = function (adbutlerJson, callback) {
                 fs.writeFile(path, data.read(), function (err) {
                     if (err) {
                         console.log(err);
-                        callback({saveImage: false});
+                        callback({saveImage: false, error: err});
                     } else {
                         console.log("success save");
                         callback({
@@ -156,17 +221,28 @@ var saveImage = function (adbutlerJson, callback) {
     }
 
 
-
-
 };
 
 
-var insertRecords = function (zohoJson, callback) {
+var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, advertiserID, callback) {
+    console.log(">>>> insertRecords <<<<");
+    console.log(zohoJson);
+    console.log(campaignID);
+    console.log(creativeImageID);
+    console.log(bannerID);
+    console.log(advertiserID);
+
+    var url_campanha = 'https://admin.adbutler.com/?ID=169124&p=campaign.banner.edit&advID=' + zohoJson.id_Adbutler +
+        '&p=campaign.banner.edit&advID=74406&campaignID=' + campaignID +
+        '&bannerID=' + bannerID;
+    console.log(url_campanha)
+
     var xml = "";
     var lifetime_dates = "No date restrictions ";
-    if(moment(zohoJson.start_date, "YYYY-MM-DD").isValid()){
+    if (moment(zohoJson.start_date, "YYYY-MM-DD").isValid()) {
         lifetime_dates = "Use date range";
-    };
+    }
+    ;
     console.log(lifetime_dates);
     xml = "<CustomModule2>" +
         "<row no='1'>" +
@@ -185,8 +261,14 @@ var insertRecords = function (zohoJson, callback) {
         "<FL val='Orcamento Diario'>" + zohoJson.dailyBudget + "</FL>" +
         "<FL val='Limite Usuario Entrega'>" + zohoJson.per_user_view_limit + "</FL>" +
         "<FL val='Limite Usuario Dia'>" + zohoJson.per_user_view_period + "</FL>" +
+        "<FL val='ID Banner'>" + bannerID + "</FL>" +
+        "<FL val='ID Campanha'>" + campaignID + "</FL>" +
+        "<FL val='CONTA CONEKTTA'>" + zohoJson.email + "</FL>" +
+        "<FL val='Imagem'>" + creativeImageID + "</FL>" +
         "</row>" +
         "</CustomModule2>"
+
+    console.log(xml);
     var url = config.zoho_url + zohoToken + "&scope=crmapi&newFormat=1&xmlData=" + xml;
     /*var url = "https://crm.zoho.com/crm/private/json/CustomModule2/insertRecords?authtoken=" + zohoToken +
      "&scope=crmapi&newFormat=1&xmlData=" + xml;*/
@@ -265,24 +347,72 @@ router.post('/createAds', function (req, res, next) {
         if (saveImageRes.saveImage) {
             console.log(saveImageRes);
             imageBannerVs2(data.adbutler, saveImageRes.fileBanner, function (imageBannerRes) {
+                console.log(">>>>> imageBannerRes <<<<<");
+                console.log(imageBannerRes);
                 if (imageBannerRes.adbutlerRes) {
-                    createSchedules(data.schedules , function (schedulesRes) {
-                        console.log(schedulesRes);
+                    createSchedules(data.schedules, function (schedulesRes) {
+                        console.log(">>>>> schedulesRes <<<<<");
+                        if (schedulesRes.schedulesRes) {
+                            placements(data.placements, schedulesRes.schedules.id, imageBannerRes.campaignID, function (placementsRes) {
+                                if (placementsRes.placementsRes) {
+                                    insertRecords(data.zoho, imageBannerRes.campaignID, imageBannerRes.creativeImageID, imageBannerRes.bannerID, data.adbutler.advertiserID, function (insertRecordsRes) {
+                                        if(insertRecordsRes.insertRecordsRes){
+                                            res.json({
+                                                success: true
+                                            });
+
+                                        }else{
+                                            res.json({
+                                                success: false,
+                                                mensage: "Erro ao publicar campanha",
+                                                error: insertRecordsRes.error
+                                            });
+                                        }
+                                    })
+                                } else {
+                                    res.json({
+                                        success: false,
+                                        mensage: "Erro ao publicar campanha",
+                                        error: placementsRes.error
+                                    });
+                                }
+
+                            });
+                            //data.placements
+                        } else {
+                            res.json({
+                                success: false,
+                                mensage: "Erro ao publicar campanha",
+                                error: schedulesRes.schedulesError
+                            });
+                        }
                     })
+                } else {
+                    res.json({
+                        success: false,
+                        mensage: "Erro ao publicar campanha",
+                        error: imageBannerRes.error
+                    });
                 }
+            });
+        } else {
+            res.json({
+                success: false,
+                mensage: "Erro ao publicar campanha",
+                error: saveImageRes.error
             });
         }
     });
 
 
     /*saveImage(data.adbutler, function (saveImageRes) {
-        console.log(saveImageRes);
-    })*/;
+     console.log(saveImageRes);
+     })*/
+    ;
 
     /*insertRecords(data.zoho, function (insertRecordsRes) {
-        console.log(insertRecordsRes);
-    });*/
-    res.send("ok");
+     console.log(insertRecordsRes);
+     });*/
 
 });
 

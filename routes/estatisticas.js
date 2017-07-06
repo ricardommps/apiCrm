@@ -41,6 +41,8 @@ router.get('/mapaestabelecimentos', function(req, res, next) {
     }else{
         var url = config.word_url + pathname + id_user + token;
     }
+    console.log(">>>>>mapaestabelecimentos<<<<");
+    console.log(url);
 
     request({
         uri: url,
@@ -71,6 +73,8 @@ router.get('/ranking', function(req, res, next) {
     }else{
         var url = config.word_url + pathname + id_user + token;
     }
+    console.log(">>>>>ranking<<<<");
+    console.log(url);
     request({
         uri: url,
         method: "GET"
@@ -103,6 +107,8 @@ router.get('/average', function(req, res, next) {
     }else{
         var url = config.word_url + pathname + id_user + token;
     }
+    console.log(">>>>>average<<<<");
+    console.log(url);
     request({
         uri: url,
         method: "GET"
