@@ -40,7 +40,7 @@ router.get('/listPas', function(req, res, next) {
     var idUser = req.query.idUser;
     pathname = 'relatorios/pas/';
     var url = config.word_url + pathname + idUser + token;
-    console.log(url);
+   // console.log(url);
    // var url = "http://world.conektta.info/api/relatorios/pas/"+idUser + token;
     request({
         uri: url,
@@ -50,8 +50,8 @@ router.get('/listPas', function(req, res, next) {
             res.send(error);
             return;
         }
-        console.log(">>>>>listPas<<<<<");
-        console.log(body);
+       // console.log(">>>>>listPas<<<<<");
+        //console.log(body);
         if(body === 'Nao existem PAs para este estabelecimento'){
             res.json({ success: false, reponse: body });
         }else{

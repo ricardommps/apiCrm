@@ -33,7 +33,7 @@ router.post('/register', function(req, res, next) {
     pathname = 'usuarios';
     token = "?api_token=1";
     var url = config.word_url + pathname + token;
-    console.log(url);
+    //console.log(url);
     request({
         uri: url,
         method: "POST",
@@ -42,7 +42,7 @@ router.post('/register', function(req, res, next) {
         if (error) {
             res.json(error);
         }
-        console.log(response.body);
+        //console.log(response.body);
         if(response){
             if(response.body.indexOf('id') > 0){
                 try{
@@ -77,7 +77,7 @@ router.post('/permissions', function(req, res, next) {
             res.json(error);
         }
         if(response){
-            console.log(response);
+           // console.log(response);
             if(response.body === 'Estabelecimentos associados com sucesso'){
                 res.json({ success: true})
             }else{

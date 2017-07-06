@@ -12,15 +12,15 @@ router.get('/lists', function(req, res, next) {
     var idUser = req.query.idUser;
     var pathname = 'contatos/getListasSms/';
     var url = config.word_url + pathname + idUser + token;
-    console.log(url);
+   // console.log(url);
 
    // var url = "http://world.conektta.info/api/contatos/getListasSms/"+idUser + token;
     request({
         uri: url,
         method: "GET"
     }, function(error, response, body) {
-        console.log(error);
-        console.log(body);
+        //console.log(error);
+        //console.log(body);
         if (error) {
             res.send(error);
             return;
@@ -76,7 +76,7 @@ router.get('/contacts', function(req, res, next) {
         var url = config.word_url + pathname + idUser + token;
     }
 
-    console.log(url);
+    //console.log(url);
    // var url = config.word_url + pathname + idUser + token;
     //var url = "http://world.conektta.info/api/contatos/getContatosSms/"+ idUser + token;
     request({

@@ -16,8 +16,8 @@ var zohoToken = "a41d3828cae33450cdd258a46f0e85f6";
 
 
 var placements = function (placementsJson, schedule, imageBannerId, callback) {
-    console.log(">>>> placements <<<<");
-    console.log(schedule);
+    //console.log(">>>> placements <<<<");
+    //console.log(schedule);
     var inserted = 0;
     var zone = 0;
     var data = {};
@@ -75,22 +75,22 @@ var placements = function (placementsJson, schedule, imageBannerId, callback) {
 }
 
 var createSchedules = function (schedulesJson, callback) {
-    console.log(schedulesJson.start_date);
+    //console.log(schedulesJson.start_date);
     if (moment(schedulesJson.start_date, "YYYY-MM-DD").isValid()) {
-        console.log("-----------IF-------");
+        //console.log("-----------IF-------");
         adbutler.schedules.create({
             "delivery_method": "default",
             "start_date": schedulesJson.start_date,
             "end_date": schedulesJson.end_date
         }).then(function (schedules) {
-            console.log(schedules);
+            //console.log(schedules);
             callback({schedulesRes: true, schedules: schedules});
         }).catch(function (schedulesError) {
-            console.log(schedulesError);
+            //console.log(schedulesError);
             callback({schedulesRes: false});
         });
     } else {
-        console.log("-----------ELSE-------");
+        //console.log("-----------ELSE-------");
         adbutler.schedules.create({
             "delivery_method": "default",
         }).then(function (schedules) {
@@ -192,11 +192,11 @@ var saveImage = function (adbutlerJson, callback) {
         fileName = adbutlerJson.idImage + ".png";
         path = './uploads/';
         path = path + fileName;
-        console.log("<<<<path>>>>");
-        console.log(path);
+       // console.log("<<<<path>>>>");
+        //console.log(path);
         http.request(adbutlerJson.linkImage, function (response) {
-            console.log(">>>request<<<");
-            console.log(response);
+           // console.log(">>>request<<<");
+            //console.log(response);
             var data = new Stream();
 
             response.on('data', function (chunk) {
@@ -206,10 +206,10 @@ var saveImage = function (adbutlerJson, callback) {
             response.on('end', function () {
                 fs.writeFile(path, data.read(), function (err) {
                     if (err) {
-                        console.log(err);
+                        //console.log(err);
                         callback({saveImage: false, error: err});
                     } else {
-                        console.log("success save");
+                        //console.log("success save");
                         callback({
                             saveImage: true,
                             fileBanner: path
@@ -225,17 +225,17 @@ var saveImage = function (adbutlerJson, callback) {
 
 
 var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, advertiserID, callback) {
-    console.log(">>>> insertRecords <<<<");
-    console.log(zohoJson);
-    console.log(campaignID);
-    console.log(creativeImageID);
-    console.log(bannerID);
-    console.log(advertiserID);
+    //console.log(">>>> insertRecords <<<<");
+    //console.log(zohoJson);
+    //console.log(campaignID);
+   // console.log(creativeImageID);
+    //console.log(bannerID);
+   // console.log(advertiserID);
 
     var url_campanha = 'https://admin.adbutler.com/?ID=169124&p=campaign.banner.edit&advID=' + zohoJson.id_Adbutler +
         '&p=campaign.banner.edit&advID=74406&campaignID=' + campaignID +
         '&bannerID=' + bannerID;
-    console.log(url_campanha)
+    //console.log(url_campanha)
 
     var xml = "";
     var lifetime_dates = "No date restrictions ";
@@ -243,7 +243,7 @@ var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, a
         lifetime_dates = "Use date range";
     }
     ;
-    console.log(lifetime_dates);
+    //console.log(lifetime_dates);
     xml = "<CustomModule2>" +
         "<row no='1'>" +
         "<FL val='Usuario Conektta'>" + zohoJson.usuario + "</FL>" +
@@ -268,7 +268,7 @@ var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, a
         "</row>" +
         "</CustomModule2>"
 
-    console.log(xml);
+    //console.log(xml);
     var url = config.zoho_url + zohoToken + "&scope=crmapi&newFormat=1&xmlData=" + xml;
     /*var url = "https://crm.zoho.com/crm/private/json/CustomModule2/insertRecords?authtoken=" + zohoToken +
      "&scope=crmapi&newFormat=1&xmlData=" + xml;*/
@@ -281,7 +281,7 @@ var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, a
         }
 
     }, function (error, response, body) {
-        console.log(body);
+       // console.log(body);
         if (error) {
             callback({insertRecordsRes: false, error: error});
             //res.json({success: false, reponse: error}) ;
@@ -339,19 +339,19 @@ router.post('/stats', function (req, res, next) {
 
 router.post('/createAds', function (req, res, next) {
     var data = req.body;
-    console.log(data);
+    //console.log(data);
 
     saveImage(data.adbutler, function (saveImageRes) {
-        console.log("-*-*-*-*-*-*-*");
-        console.log(saveImageRes);
+        //console.log("-*-*-*-*-*-*-*");
+        //console.log(saveImageRes);
         if (saveImageRes.saveImage) {
-            console.log(saveImageRes);
+            //console.log(saveImageRes);
             imageBannerVs2(data.adbutler, saveImageRes.fileBanner, function (imageBannerRes) {
-                console.log(">>>>> imageBannerRes <<<<<");
-                console.log(imageBannerRes);
+               // console.log(">>>>> imageBannerRes <<<<<");
+               // console.log(imageBannerRes);
                 if (imageBannerRes.adbutlerRes) {
                     createSchedules(data.schedules, function (schedulesRes) {
-                        console.log(">>>>> schedulesRes <<<<<");
+                       // console.log(">>>>> schedulesRes <<<<<");
                         if (schedulesRes.schedulesRes) {
                             placements(data.placements, schedulesRes.schedules.id, imageBannerRes.campaignID, function (placementsRes) {
                                 if (placementsRes.placementsRes) {
