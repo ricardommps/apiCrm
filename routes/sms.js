@@ -70,13 +70,11 @@ router.get('/contacts', function(req, res, next) {
     var idUser = req.query.idUser;
     var pathname = 'contatos/getContatosSms/';
 
-    if(req.query.pasId  > 0 ){
+    if(req.query.pasId.length > 0){
         var url = config.word_url + pathname + idUser + "/" +  req.query.pasId + "/" +  token;
     }else{
         var url = config.word_url + pathname + idUser + token;
     }
-
-    //console.log(url);
    // var url = config.word_url + pathname + idUser + token;
     //var url = "http://world.conektta.info/api/contatos/getContatosSms/"+ idUser + token;
     request({
@@ -90,7 +88,6 @@ router.get('/contacts', function(req, res, next) {
         if(response.body == "Nao existem contatos para esse usuario"){
             res.json({ success: false, response: response.body });
         }else{
-
             res.json({ success: true, response: response.body });
         }
 

@@ -41,7 +41,7 @@ var placements = function (placementsJson, schedule, imageBannerId, callback) {
                     cpa: 0.0
                 }
             }
-        }else{
+        } else {
             data = {
                 "active": true,
                 "schedule": schedule,
@@ -53,6 +53,8 @@ var placements = function (placementsJson, schedule, imageBannerId, callback) {
                     id: zone,
                     type: "banner_zone"
                 },
+                "per_user_view_limit": placementsJson.per_user_view_limit,
+                "per_user_view_period": placementsJson.per_user_view_period,
                 "cost": {
                     cpm: placementsJson.cost.cpm,
                     cpc: 0.0,
@@ -105,19 +107,43 @@ var createSchedules = function (schedulesJson, callback) {
 var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
 
     var mediaGroupID = 12409;  // NOTE: use te media group ID that exists in your account
-
+    console.log(">>>.adbutlerJson<<<<");
+    console.log(adbutlerJson);
     adbutler.creatives.images.create({
         "group": mediaGroupID,
         "name": adbutlerJson.name,
         "description": adbutlerJson.description.toString(),
         "file": fileBanner
     }).then(function (creativeImage) {
-        adbutler.banners.images.create({
-            "name": adbutlerJson.name,
-            "width": 350,
-            "height": 400,
-            "creative": creativeImage.id
-        }).then(function (bannerImage) {
+        var adbutlerData = {};
+        try{
+            if(adbutlerJson.url || adbutlerJson.url.length > 0){
+                adbutlerData =  {
+                    "name": adbutlerJson.name,
+                    "width": 350,
+                    "height": 400,
+                    "creative": creativeImage.id,
+                    "location" : adbutlerJson.url
+                }
+            }else{
+                adbutlerData =  {
+                    "name": adbutlerJson.name,
+                    "width": 350,
+                    "height": 400,
+                    "creative": creativeImage.id,
+                }
+            }
+        }catch (err){
+            adbutlerData =  {
+                "name": adbutlerJson.name,
+                "width": 350,
+                "height": 400,
+                "creative": creativeImage.id,
+            }
+        }
+
+        adbutler.banners.images.create(adbutlerData).then(function (bannerImage) {
+            console.log(bannerImage);
             adbutler.campaigns.banners.create({
                 "advertiser": adbutlerJson.advertiserID,
                 "width": 350,
@@ -192,10 +218,10 @@ var saveImage = function (adbutlerJson, callback) {
         fileName = adbutlerJson.idImage + ".png";
         path = './uploads/';
         path = path + fileName;
-       // console.log("<<<<path>>>>");
+        // console.log("<<<<path>>>>");
         //console.log(path);
         http.request(adbutlerJson.linkImage, function (response) {
-           // console.log(">>>request<<<");
+            // console.log(">>>request<<<");
             //console.log(response);
             var data = new Stream();
 
@@ -228,9 +254,9 @@ var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, a
     //console.log(">>>> insertRecords <<<<");
     //console.log(zohoJson);
     //console.log(campaignID);
-   // console.log(creativeImageID);
+    // console.log(creativeImageID);
     //console.log(bannerID);
-   // console.log(advertiserID);
+    // console.log(advertiserID);
 
     var url_campanha = 'https://admin.adbutler.com/?ID=169124&p=campaign.banner.edit&advID=' + zohoJson.id_Adbutler +
         '&p=campaign.banner.edit&advID=74406&campaignID=' + campaignID +
@@ -281,7 +307,7 @@ var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, a
         }
 
     }, function (error, response, body) {
-       // console.log(body);
+        // console.log(body);
         if (error) {
             callback({insertRecordsRes: false, error: error});
             //res.json({success: false, reponse: error}) ;
@@ -309,6 +335,7 @@ router.get('/campaignsList', function (req, res, next) {
             if (response.body === '"Sem registros para esse usuario"') {
                 res.json({success: true, response: response.body});
             } else {
+                //console.log(body);
                 res.json({success: true, response: JSON.parse(response.body)});
             }
 
@@ -321,20 +348,152 @@ router.get('/campaignsList', function (req, res, next) {
 
 });
 
+router.post('/campaignsListStats', function (req, res, next) {
+    var token = "?api_token=" + global.token;
+    var id_user = req.body.id_user;
+    var advertiserId = req.body.advertiserId;
+    var preset = req.body.preset;
+    var pathname = 'consultas/ads/';
+    var url = config.word_url + pathname + id_user + token;
+
+    request({
+        uri: url,
+        method: "GET"
+    }, function (error, response, body) {
+        if (error) {
+            res.json({success: false});
+            return;
+        }
+        try {
+            if (body === '"Sem registros para esse usuario"') {
+                res.json({success: false, response: body});
+            } else {
+                var campaigns = JSON.parse(body);
+                adbutler.stats.read({
+                    'type': 'campaign',
+                    'period' :'day',
+                    'timezone' :'America/Los_Angeles',
+                    'preset':  preset,
+                    advertisers : advertiserId
+
+                }).then(function (stats) {
+                    for (var indexStats in stats.data) {
+                        //console.log("<<<<<<<<<<<");
+                        //console.log(indexStats);
+                        //console.log(indexStats);
+                        for (var indexCampaigns in campaigns) {
+                            console.log(campaigns[indexCampaigns].id_campanha);
+                            if(campaigns[indexCampaigns].id_campanha == indexStats){
+                                campaigns[indexCampaigns].impressions = stats.data[indexStats][0].impressions;
+                                campaigns[indexCampaigns].clicks = stats.data[indexStats][0].clicks
+                            }
+                        }
+
+                    }
+
+                    for (var index in campaigns) {
+                        if(!campaigns[index].impressions){
+                            campaigns[index].impressions = 0;
+                        }
+                        if(!campaigns[index].clicks){
+                            campaigns[index].clicks = 0;
+                        }
+                    }
+
+                    console.log(campaigns);
+                    res.json({success: true, response: campaigns});
+
+                }).catch(function (statsError) {
+                    console.log(statsError);
+                    res.json({success: false, response: statsError});
+                });
+
+
+
+            }
+
+
+        } catch (err) {
+            res.json({success: false});
+            return;
+        }
+
+    })
+
+
+
+});
+
 router.post('/stats', function (req, res, next) {
 
     var settings = req.body;
+    var stattsData = [];
+    var statData = {};
+    console.log(settings.campaigns);
 
     adbutler.stats.read(settings)
         .then(function (stats) {
-            res.json({success: true, response: stats});
+            for(var index in stats.data[settings.campaigns] ){
+                statData = {
+                    data:moment(stats.data[settings.campaigns][index].start_date).format('DD/MM/YYYY'),
+                    impressions:stats.data[settings.campaigns][index].impressions,
+                    clicks:stats.data[settings.campaigns][index].clicks
+                }
+                stattsData.push(statData);
+            }
+            console.log(stattsData);
+
+            res.json({success: true, response: stats,stattsData:stattsData});
         })
         .catch(function (statsError) {
-            // console.log(statsError);
+            //console.log(statsError);
             res.json({success: false, response: statsError});
         });
 
 
+});
+
+router.post('/statsAdvertiser', function (req, res, next) {
+
+    var advertiserId = req.body.advertiserId;
+    var preset = req.body.preset;
+    var stattsData = [];
+    var statData = {};
+    var jsonReturn = {};
+
+    adbutler.stats.read({
+        'type': 'advertiser',
+        'period': 'day',
+        'timezone': 'America/Los_Angeles',
+        'preset': preset,
+        advertisers : advertiserId
+    }).then(function (stats) {
+        var json = stats;
+        for (var prop in json.data) {
+            //console.log(json.data[prop]);
+                for (var stats in json.data[prop]) {
+                    statData = {
+                        data:moment(json.data[prop][stats].start_date).format('DD/MM/YYYY'),
+                        impressions:json.data[prop][stats].impressions,
+                        clicks:json.data[prop][stats].clicks
+                    }
+                    stattsData.push(statData);
+                }
+
+
+        }
+       // console.log(stattsData);
+        res.json({success: true, response: stattsData});
+    }).catch(function (statsError) {
+        console.log(statsError);
+        res.json({success: false, response: statsError});
+    });
+});
+
+router.post('/statsCampaign', function (req, res, next) {
+
+    //console.log(req.body);
+    res.json({success: false});
 });
 
 router.post('/createAds', function (req, res, next) {
@@ -347,21 +506,21 @@ router.post('/createAds', function (req, res, next) {
         if (saveImageRes.saveImage) {
             //console.log(saveImageRes);
             imageBannerVs2(data.adbutler, saveImageRes.fileBanner, function (imageBannerRes) {
-               // console.log(">>>>> imageBannerRes <<<<<");
-               // console.log(imageBannerRes);
+                // console.log(">>>>> imageBannerRes <<<<<");
+                // console.log(imageBannerRes);
                 if (imageBannerRes.adbutlerRes) {
                     createSchedules(data.schedules, function (schedulesRes) {
-                       // console.log(">>>>> schedulesRes <<<<<");
+                        // console.log(">>>>> schedulesRes <<<<<");
                         if (schedulesRes.schedulesRes) {
                             placements(data.placements, schedulesRes.schedules.id, imageBannerRes.campaignID, function (placementsRes) {
                                 if (placementsRes.placementsRes) {
                                     insertRecords(data.zoho, imageBannerRes.campaignID, imageBannerRes.creativeImageID, imageBannerRes.bannerID, data.adbutler.advertiserID, function (insertRecordsRes) {
-                                        if(insertRecordsRes.insertRecordsRes){
+                                        if (insertRecordsRes.insertRecordsRes) {
                                             res.json({
                                                 success: true
                                             });
 
-                                        }else{
+                                        } else {
                                             res.json({
                                                 success: false,
                                                 mensage: "Erro ao publicar campanha",

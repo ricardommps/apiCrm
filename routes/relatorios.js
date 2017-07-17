@@ -40,7 +40,7 @@ router.get('/listPas', function(req, res, next) {
     var idUser = req.query.idUser;
     pathname = 'relatorios/pas/';
     var url = config.word_url + pathname + idUser + token;
-   // console.log(url);
+    console.log(url);
    // var url = "http://world.conektta.info/api/relatorios/pas/"+idUser + token;
     request({
         uri: url,

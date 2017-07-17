@@ -33,7 +33,7 @@ router.post('/register', function(req, res, next) {
     pathname = 'usuarios';
     token = "?api_token=1";
     var url = config.word_url + pathname + token;
-    //console.log(url);
+    console.log(req.body);
     request({
         uri: url,
         method: "POST",
@@ -42,7 +42,7 @@ router.post('/register', function(req, res, next) {
         if (error) {
             res.json(error);
         }
-        //console.log(response.body);
+        console.log(response.body);
         if(response){
             if(response.body.indexOf('id') > 0){
                 try{
@@ -98,16 +98,17 @@ router.get('/userPermissions', function(req, res, next) {
     var idUser = req.query.idUser;
     token = "?api_token="+global.token;
     var url = config.word_url + pathname + idUser + token;
-    //console.log(url);
+    console.log(url);
     request({
         uri: url,
         method: "GET",
         form:req.body
     }, function(error, response, body) {
+        console.log(body);
+        console.log(error);
         if (error) {
             res.json(error);
         }
-       // console.log(body);
         if(response){
             if(response.body === 'Usuario não possui estabelecimentos cadastrados'){
                 res.json({ success: false})

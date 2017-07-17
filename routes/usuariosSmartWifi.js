@@ -60,16 +60,16 @@ router.post('/register', function (req, res, next) {
     var token = "?api_token=" + global.token;
     pathname = 'estabelecimentos';
     var url = config.word_url + pathname + token;
-    //console.log("Registro de PA");
-    //console.log(req.body);
+    console.log("Registro de PA");
+    console.log(url);
     // var url = "http://world.conektta.info/api/estabelecimentos" + token;
     request({
         uri: url,
         method: "POST",
         form: req.body
     }, function (error, response, body) {
-        //console.log("RETORNO -> Registro de PA");
-        //console.log(body);
+        console.log("RETORNO -> Registro de PA");
+        console.log(body);
         if (error) {
             res.send(error);
             return;

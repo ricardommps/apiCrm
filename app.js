@@ -119,10 +119,10 @@ require('./sockets/base')(io);
 require('./sockets/emailBase')(io);
 require('./sockets/smsBase')(io);
 
-apiRoutes.post('/teste' , function(req, res){
-
+apiRoutes.post('/websocket' , function(req, res){
+    console.log(req.body);
     //res.json(req.body);
-    io.sockets.emit('send:teste', req.body);
+    io.sockets.emit('send:websocket', req.body);
     res.json(200, {message: "Message received!"});
 
 });

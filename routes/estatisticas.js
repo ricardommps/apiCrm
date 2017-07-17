@@ -73,8 +73,8 @@ router.get('/ranking', function(req, res, next) {
     }else{
         var url = config.word_url + pathname + id_user + token;
     }
-    //console.log(">>>>>ranking<<<<");
-    //console.log(url);
+    console.log(">>>>>ranking<<<<");
+    console.log(url);
     request({
         uri: url,
         method: "GET"
@@ -83,6 +83,7 @@ router.get('/ranking', function(req, res, next) {
             res.send(error);
             return;
         }
+        console.log(body);
         // var jsonres = JSON.parse(response.body);
         if(response.body == 'Sem dados para sua solicitacao'){
             res.json({ success: false });
