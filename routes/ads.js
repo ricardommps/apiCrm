@@ -21,6 +21,7 @@ var placements = function (placementsJson, schedule, imageBannerId, callback) {
     var inserted = 0;
     var zone = 0;
     var data = {};
+    var placementsArray = [];
     for (var i = 0; i < placementsJson.zone.length; i++) {
         zone = parseInt(placementsJson.zone[i].id, 10);
         if (placementsJson.per_user_view_limit == 0) {
@@ -64,8 +65,9 @@ var placements = function (placementsJson, schedule, imageBannerId, callback) {
         }
 
         adbutler.placements.create(data).then(function (placements) {
+            placementsArray.push(placements.id);
             if (++inserted == placementsJson.zone.length) {
-                callback({placementsRes: true, placements: placements});
+                callback({placementsRes: true, placements: placementsArray});
             }
 
         }).catch(function (placementsError) {
@@ -107,8 +109,8 @@ var createSchedules = function (schedulesJson, callback) {
 var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
 
     var mediaGroupID = 12409;  // NOTE: use te media group ID that exists in your account
-    console.log(">>>.adbutlerJson<<<<");
-    console.log(adbutlerJson);
+    //console.log(">>>.adbutlerJson<<<<");
+   // console.log(adbutlerJson);
     adbutler.creatives.images.create({
         "group": mediaGroupID,
         "name": adbutlerJson.name,
@@ -143,7 +145,7 @@ var imageBannerVs2 = function (adbutlerJson, fileBanner, callback) {
         }
 
         adbutler.banners.images.create(adbutlerData).then(function (bannerImage) {
-            console.log(bannerImage);
+            //console.log(bannerImage);
             adbutler.campaigns.banners.create({
                 "advertiser": adbutlerJson.advertiserID,
                 "width": 350,
@@ -250,7 +252,7 @@ var saveImage = function (adbutlerJson, callback) {
 };
 
 
-var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, advertiserID, callback) {
+var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, placementsId, advertiserID, callback) {
     //console.log(">>>> insertRecords <<<<");
     //console.log(zohoJson);
     //console.log(campaignID);
@@ -290,6 +292,7 @@ var insertRecords = function (zohoJson, campaignID, creativeImageID, bannerID, a
         "<FL val='ID Banner'>" + bannerID + "</FL>" +
         "<FL val='ID Campanha'>" + campaignID + "</FL>" +
         "<FL val='CONTA CONEKTTA'>" + zohoJson.email + "</FL>" +
+        "<FL val='Placement'>" + placementsId + "</FL>" +
         "<FL val='Imagem'>" + creativeImageID + "</FL>" +
         "</row>" +
         "</CustomModule2>"
@@ -382,7 +385,7 @@ router.post('/campaignsListStats', function (req, res, next) {
                         //console.log(indexStats);
                         //console.log(indexStats);
                         for (var indexCampaigns in campaigns) {
-                            console.log(campaigns[indexCampaigns].id_campanha);
+                            //console.log(campaigns[indexCampaigns].id_campanha);
                             if(campaigns[indexCampaigns].id_campanha == indexStats){
                                 campaigns[indexCampaigns].impressions = stats.data[indexStats][0].impressions;
                                 campaigns[indexCampaigns].clicks = stats.data[indexStats][0].clicks
@@ -400,7 +403,7 @@ router.post('/campaignsListStats', function (req, res, next) {
                         }
                     }
 
-                    console.log(campaigns);
+                    //console.log(campaigns);
                     res.json({success: true, response: campaigns});
 
                 }).catch(function (statsError) {
@@ -429,7 +432,7 @@ router.post('/stats', function (req, res, next) {
     var settings = req.body;
     var stattsData = [];
     var statData = {};
-    console.log(settings.campaigns);
+    //console.log(settings.campaigns);
 
     adbutler.stats.read(settings)
         .then(function (stats) {
@@ -441,7 +444,7 @@ router.post('/stats', function (req, res, next) {
                 }
                 stattsData.push(statData);
             }
-            console.log(stattsData);
+           // console.log(stattsData);
 
             res.json({success: true, response: stats,stattsData:stattsData});
         })
@@ -514,7 +517,14 @@ router.post('/createAds', function (req, res, next) {
                         if (schedulesRes.schedulesRes) {
                             placements(data.placements, schedulesRes.schedules.id, imageBannerRes.campaignID, function (placementsRes) {
                                 if (placementsRes.placementsRes) {
-                                    insertRecords(data.zoho, imageBannerRes.campaignID, imageBannerRes.creativeImageID, imageBannerRes.bannerID, data.adbutler.advertiserID, function (insertRecordsRes) {
+                                   // console.log(">>>placementsRes<<<");
+                                   // console.log(placementsRes.placements);
+                                    insertRecords(data.zoho,
+                                        imageBannerRes.campaignID,
+                                        imageBannerRes.creativeImageID,
+                                        imageBannerRes.bannerID,
+                                        placementsRes.placements,
+                                        data.adbutler.advertiserID, function (insertRecordsRes) {
                                         if (insertRecordsRes.insertRecordsRes) {
                                             res.json({
                                                 success: true
